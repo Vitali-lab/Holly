@@ -36,7 +36,7 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 app.use(express.static(path.join(__dirname, "dist")));
-app.get(/^(?!\/api).*/, (req, res) => {
+app.get(/^(?!\/).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 app.use("/uploads", express.static(uploadsDir));
@@ -52,7 +52,7 @@ app.use("/", widgetsRouter);
 mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
-    app.listen(port, () => {
+    app.listen(port, "0.0.0.0", () => {
       console.log(`Server started on port ${port}`);
     });
   })
