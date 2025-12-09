@@ -19,9 +19,25 @@ const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://90.156.211.91",
+  "http://90.156.211.91:80",
+  "http://90.156.211.91:3000",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -36,7 +52,7 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 app.use(express.static(path.join(__dirname, "dist")));
-app.get(/^(?!\/).*/, (req, res) => {
+app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 app.use("/uploads", express.static(uploadsDir));
