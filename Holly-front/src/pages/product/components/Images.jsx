@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const ImagesContainer = ({ className, product }) => {
   const [currentImage, setCurrentImage] = useState(0);
 
-  console.log(product);
+  product;
 
   return (
     <div className={className}>

@@ -5,8 +5,6 @@ if (!process.env.JWT_SECRET) {
 }
 const secret = process.env.JWT_SECRET;
 
-console.log(secret);
-
 export const generate = (data) => {
   return jwt.sign(data, secret, { expiresIn: "1d" });
 };

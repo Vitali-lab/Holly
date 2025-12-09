@@ -24,8 +24,6 @@ const RatingContainer = ({
     }
   };
 
-  console.log(isRating());
-
   const addRating = () => {
     const rating = {
       userId: currentUser.id,

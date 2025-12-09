@@ -134,8 +134,6 @@ export const getProductRating = async (id) => {
 export const editProductRating = createAsyncThunk(
   'products/editRating',
   async ({ data }, { rejectWithValue }) => {
-    console.log(data, 'asdad');
-
     try {
       const { userId, userRating, postId } = data;
 
@@ -154,8 +152,6 @@ export const editProductRating = createAsyncThunk(
           },
         },
       });
-
-      console.log(updatedProduct, 'updatedProduct');
 
       return updatedProduct.data;
     } catch (err) {

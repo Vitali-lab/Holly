@@ -14,10 +14,8 @@ import { orderRouter } from "./routes/orderRoutes.js";
 import { createUploadRoutes } from "./routes/uploadRoutes.js";
 import { widgetsRouter } from "./routes/widgetsRouter.js";
 
-const port = 3005;
+const port = process.env.PORT;
 const app = express();
-
-console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -37,7 +35,10 @@ const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
-
+app.use(express.static(path.join(__dirname, "dist")));
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 app.use("/uploads", express.static(uploadsDir));
 
 app.use("/", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
@@ -49,7 +50,7 @@ app.use("/", orderRouter);
 app.use("/", widgetsRouter);
 
 mongoose
-  .connect("mongodb://vitali:mongopass@localhost:27017/")
+  .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(port, () => {
       console.log(`Server started on port ${port}`);

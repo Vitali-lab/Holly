@@ -64,7 +64,7 @@ const ProductInfoContainer = ({
       setIsUploading(false);
     }
   };
-  console.log(image);
+  image;
 
   return (
     <div className={className}>
