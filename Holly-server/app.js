@@ -52,9 +52,12 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 app.use(express.static(path.join(__dirname, "dist")));
-app.get(/^(?!\/api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
+app.get(
+  /^\/(?!api|uploads|categories|seasons|widgets|products|users|orders|login|register|health).*/,
+  (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+  }
+);
 app.use("/uploads", express.static(uploadsDir));
 
 app.use("/", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
