@@ -1,4 +1,4 @@
-export const API_URL = 'http://90.156.211.91';
+export const API_URL = '/api';
 //http://90.156.211.91:3005
 
 export const API_URL_CATEGORIES = `${API_URL}/categories`;
