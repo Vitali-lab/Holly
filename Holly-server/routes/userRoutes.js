@@ -20,6 +20,50 @@ import { mapCartProduct } from "../helpers/mapCartProduct.js";
 const router = Router();
 const getCart = getUserCart;
 
+router.post("/register", async (req, res) => {
+  try {
+    const { user, token } = await register(
+      req.body.name,
+      req.body.email,
+      req.body.password
+    );
+    res.cookie("token", token, {
+      httpOnly: true,
+    });
+    res.send({ error: null, data: mapUser(user) });
+  } catch (err) {
+    res.send({
+      error: err.message || "Ошибка регистрации",
+    });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  try {
+    const { token, user } = await login(req.body.email, req.body.password);
+    res.cookie("token", token, {
+      httpOnly: true,
+    });
+
+    res.send({ error: null, user: mapUser(user) });
+  } catch (err) {
+    res.send({
+      error: err.message || "Ошибка авторизации",
+    });
+  }
+});
+
+router.post("/logout", async (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.send({ error: null });
+  } catch (err) {
+    res.send({
+      error: err.message || "Ошибка выхода",
+    });
+  }
+});
+
 router.get("/me", async (req, res) => {
   try {
     const token = req.cookies.token;
@@ -136,49 +180,4 @@ router.delete("/users/:userId/favorites/:productId", async (req, res) => {
   res.send({ error: null });
 });
 
-router.post("/register", async (req, res) => {
-  try {
-    const { user, token } = await register(
-      req.body.name,
-      req.body.email,
-      req.body.password
-    );
-    res.cookie("token", token, {
-      httpOnly: true,
-    });
-    res.send({ error: null, data: mapUser(user) });
-  } catch (err) {
-    res.send({
-      error: err.message || "Ошибка регистрации",
-    });
-  }
-});
-
-router.post("/login", async (req, res) => {
-  try {
-    const { token, user } = await login(req.body.email, req.body.password);
-    res.cookie("token", token, {
-      httpOnly: true,
-    });
-
-    res.send({ error: null, user: mapUser(user) });
-  } catch (err) {
-    res.send({
-      error: err.message || "Ошибка авторизации",
-    });
-  }
-});
-
-router.post("/logout", async (req, res) => {
-  try {
-    res.clearCookie("token");
-    res.send({ error: null });
-  } catch (err) {
-    res.send({
-      error: err.message || "Ошибка выхода",
-    });
-  }
-});
-
 export const userRouter = router;
-

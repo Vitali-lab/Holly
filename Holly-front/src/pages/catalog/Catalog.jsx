@@ -25,13 +25,12 @@ const CatalogContainer = ({ className }) => {
     () => ({
       limit: ITEMS_PER_PAGE || 10,
       page: currentPage || 1,
-      lastPage: lastPage || 1,
       seasons,
       categories,
       minPrice,
       maxPrice,
     }),
-    [currentPage, lastPage, seasons, categories, minPrice, maxPrice]
+    [currentPage, seasons, categories, minPrice, maxPrice]
   );
 
   useEffect(() => {
@@ -91,11 +90,10 @@ export const Catalog = styled(CatalogContainer)`
   }
 
   & .products-container {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
+    min-width: 1300px;
+    justify-content: flex-start;
     align-items: flex-start;
-    min-height: 60vh;
     gap: 20px;
   }
 
@@ -184,8 +182,9 @@ export const Catalog = styled(CatalogContainer)`
 
   @media (max-width: 576px) {
     margin: 150px 0;
+    width: 100%;
     & .products-container {
-      width: min(450px, 100%);
+      width: max(450px, 100%);
       flex-direction: column;
       justify-content: center;
       align-items: center;

@@ -45,13 +45,13 @@ export const PostsList = styled(PostsListContainer)`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 34px;
-  margin: 0 0 0 50px;
+  margin-left: 50px;
   padding: 10px 0 0px;
 
   & .open-filters {
+    display: none;
     cursor: pointer;
-    display: flex;
-    position: absolute;
+    position: sticky;
     top: 130px;
     left: 10px;
   }

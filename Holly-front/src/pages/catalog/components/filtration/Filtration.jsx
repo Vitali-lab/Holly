@@ -24,7 +24,7 @@ const fadeIn = keyframes`
 
 const FiltrationContainer = ({
   className,
-  filters = initialFilters,
+  filters,
   totalCount,
   isOpenFilters,
   setIsOpenFilters,
@@ -41,7 +41,7 @@ const FiltrationContainer = ({
     if (season) {
       dispatch(acSetFilterSeason(season));
     }
-  }, [location, allSeasons, dispatch]);
+  }, [location.search, dispatch]);
 
   const deleteFilters = () => {
     dispatch(acSetFilters(initialFilters));

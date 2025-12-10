@@ -12,7 +12,7 @@ import { mapProduct } from "../helpers/mapProduct.js";
 
 const router = Router();
 
-router.get("/products/all", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const products = await Product.find({}).sort({ createdAt: -1 });
     res.send({ data: products.map(mapProduct) });
@@ -22,7 +22,7 @@ router.get("/products/all", async (req, res) => {
   }
 });
 
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const {
       search = "",
@@ -83,7 +83,7 @@ router.get("/products", async (req, res) => {
   }
 });
 
-router.get("/products/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const product = await getProduct(req.params.id);
 
@@ -97,7 +97,7 @@ router.get("/products/:id", async (req, res) => {
   }
 });
 
-router.patch("/products/:id", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
     const updatedProduct = await editProduct(req.params.id, req.body);
     if (!updatedProduct) {
@@ -109,17 +109,17 @@ router.patch("/products/:id", async (req, res) => {
   }
 });
 
-router.get("/products/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const product = await getProduct(req.params.id);
   res.send({ data: mapProduct(product) });
 });
 
-router.post("/products", async (req, res) => {
+router.post("/", async (req, res) => {
   const newPost = await addProduct(req.body);
   res.send({ data: mapProduct(newPost) });
 });
 
-router.patch("/products/:id", async (req, res) => {
+router.patch("/:id", async (req, res) => {
   const updatedPost = await editProduct(req.params.id, {
     name: req.body.name,
     description: req.body.description,
@@ -134,10 +134,9 @@ router.patch("/products/:id", async (req, res) => {
   res.send({ data: mapProduct(updatedPost) });
 });
 
-router.delete("/products/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   await deleteProduct(req.params.id);
   res.send({ error: null });
 });
 
 export const productRouter = router;
-

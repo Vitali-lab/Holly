@@ -25,3 +25,6 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - mongo_data:/data/db
+
+volumes:
+  mongo_data:

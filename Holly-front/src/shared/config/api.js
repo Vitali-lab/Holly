@@ -1,4 +1,5 @@
-export const API_URL = 'http://90.156.211.91:3005';
+export const API_URL = 'http://localhost:3005/api';
+//http://90.156.211.91:3005
 
 export const API_URL_CATEGORIES = `${API_URL}/categories`;
 export const API_URL_SEASONS = `${API_URL}/seasons`;

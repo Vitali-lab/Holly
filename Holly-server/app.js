@@ -6,6 +6,7 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+
 import { productRouter } from "./routes/productRoutes.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { seasonRouter } from "./routes/seasonRoutes.js";
@@ -19,6 +20,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
+
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
@@ -29,17 +31,13 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
       }
+      callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
@@ -51,22 +49,22 @@ const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
-app.use(express.static(path.join(__dirname, "dist")));
-app.get(
-  /^\/(?!api|uploads|categories|seasons|widgets|products|users|orders|login|register|health).*/,
-  (req, res) => {
-    res.sendFile(path.join(__dirname, "dist", "index.html"));
-  }
-);
+
 app.use("/uploads", express.static(uploadsDir));
 
-app.use("/", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
-app.use("/", productRouter);
-app.use("/", userRouter);
-app.use("/", seasonRouter);
-app.use("/", categoryRouter);
-app.use("/", orderRouter);
-app.use("/", widgetsRouter);
+app.use("/api/uploads", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
+app.use("/api/products", productRouter);
+app.use("/api", userRouter);
+app.use("/api/seasons", seasonRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/orders", orderRouter);
+app.use("/api/widgets", widgetsRouter);
+
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 mongoose
   .connect(process.env.MONGO_URL)
@@ -75,6 +73,4 @@ mongoose
       console.log(`Server started on port ${port}`);
     });
   })
-  .catch((err) => {
-    console.log(err);
-  });
+  .catch((err) => console.error(err));

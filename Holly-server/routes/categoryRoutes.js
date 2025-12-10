@@ -12,17 +12,17 @@ const router = Router();
 
 (addCategory, fetchCategories, deleteCategory);
 
-router.get("/categories", async (req, res) => {
+router.get("/", async (req, res) => {
   const categories = await fetchCategories();
   res.send({ categories: categories.map(mapSeasons) });
 });
 
-router.post("/categories", async (req, res) => {
+router.post("/", async (req, res) => {
   const newCategory = await addCategory({ name: req.body.name });
   res.send(mapCategories(newCategory));
 });
 
-router.delete("/categories/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   await deleteCategory(req.params.id);
   res.send({ error: null });
 });
