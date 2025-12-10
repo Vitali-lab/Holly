@@ -5,11 +5,12 @@ services:
       dockerfile: ./Dockerfile
     container_name: server
     ports:
-      - "80:3005"
+      - "3005:3005"
     depends_on:
       - mongo
     env_file:
       - .env
+    restart: always
 
   mongo:
     image: mongo
