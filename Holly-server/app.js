@@ -6,7 +6,6 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-
 import { productRouter } from "./routes/productRoutes.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { seasonRouter } from "./routes/seasonRoutes.js";
@@ -45,6 +44,7 @@ app.use(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsDir = path.join(__dirname, "uploads");
+const frontDir = path.join(__dirname, "../Holly-front/dist");
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -60,11 +60,13 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/widgets", widgetsRouter);
 
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(frontDir)));
 
 app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+  res.sendFile(path.join(frontDir, "index.html"));
 });
+
+console.log(frontDir);
 
 mongoose
   .connect(process.env.MONGO_URL)
