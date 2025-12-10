@@ -12,7 +12,7 @@ RUN npm ci --omit=dev
 
 COPY ./Holly-server .
 
-COPY --from=builder /app/Holly-front/dist ./dist
+COPY --from=builder /Holly/Holly-front/dist ./dist
 
 COPY .env .
 EXPOSE 3005
