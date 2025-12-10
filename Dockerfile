@@ -14,4 +14,4 @@ COPY ./Holly-server .
 COPY --from=builder /app/Holly-front/dist ./dist
 COPY .env . 
 EXPOSE 3005
-CMD ["node", "app.js", ]
+CMD ["npm", "start", ]
