@@ -3,16 +3,16 @@ WORKDIR /app
 COPY ./Holly-front ./Holly-front
 RUN cd Holly-front && npm ci && npm run build
 
-
 FROM node:20
-WORKDIR /app
-COPY ./Holly-server ./Holly-server
-COPY ./Holly-server/package*.json ./Holly-server/
-RUN cd Holly-server && npm ci --omit=dev
+WORKDIR /app/Holly-server
+COPY ./Holly-server/package*.json ./
+RUN npm ci --omit=dev
+COPY ./Holly-server .
 
 
-COPY --from=builder /app/Holly-front/dist ./Holly-server/dist
+COPY --from=builder /app/Holly-front/dist ./dist
+
 COPY .env . 
 EXPOSE 3005
-WORKDIR /app/Holly-server
-CMD ["npm", "start" ]
+
+CMD ["npm", "start"]
