@@ -109,29 +109,9 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
-  const product = await getProduct(req.params.id);
-  res.send({ data: mapProduct(product) });
-});
-
 router.post("/", async (req, res) => {
   const newPost = await addProduct(req.body);
   res.send({ data: mapProduct(newPost) });
-});
-
-router.patch("/:id", async (req, res) => {
-  const updatedPost = await editProduct(req.params.id, {
-    name: req.body.name,
-    description: req.body.description,
-    images: req.body.images,
-    price: req.body.price,
-    sizes: req.body.sizes,
-    rating: req.body.rating,
-    category_id: req.body.category_id,
-    season_id: req.body.season_id,
-    sale: req.body.sale,
-  });
-  res.send({ data: mapProduct(updatedPost) });
 });
 
 router.delete("/:id", async (req, res) => {

@@ -44,13 +44,11 @@ app.use(
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsDir = path.join(__dirname, "uploads");
-const frontDir = path.join(__dirname, "../Holly-front/dist");
+const frontDir = path.join(__dirname, "dist");
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
-
-app.use("/uploads", express.static(uploadsDir));
 
 app.use("/api/uploads", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
 app.use("/api/products", productRouter);
@@ -60,11 +58,8 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/widgets", widgetsRouter);
 
-app.use("/api", (req, res) => {
-  res.status(404).json({ error: "API route not found" });
-});
-
-app.use(express.static(path.join(frontDir)));
+app.use("/uploads", express.static(uploadsDir));
+app.use(express.static(frontDir));
 
 app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(frontDir, "index.html"));
