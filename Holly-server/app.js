@@ -60,6 +60,10 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/widgets", widgetsRouter);
 
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "API route not found" });
+});
+
 app.use(express.static(path.join(frontDir)));
 
 app.get(/^\/(?!api).*/, (req, res) => {
