@@ -50,7 +50,9 @@ const ProductInfoContainer = ({
       }
 
       const data = await res.json();
-      const uploadedPath = data?.data?.imagePath ? `${API_URL}${data.data.imagePath}` : null;
+      const uploadedPath = data?.data?.imagePath
+        ? `http://90.156.211.91${data.data.imagePath}`
+        : null;
 
       notifySuccess('Файл успешно загружен');
       setFile(null);
