@@ -138,7 +138,6 @@ export const CollectionWidget = styled(CollectionWidgetContainer)`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  flex-wrap: wrap;
   align-items: center;
   gap: 30px;
   & .collections {
@@ -173,7 +172,8 @@ export const CollectionWidget = styled(CollectionWidgetContainer)`
     }
   }
 
-  @media (max-width: 1400px) {
+  @media (max-width: 500px) {
+    flex-wrap: wrap;
     & .collections {
       width: 250px;
       height: 400px;

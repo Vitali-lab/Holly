@@ -71,7 +71,7 @@ const CatalogContainer = ({ className }) => {
             <p>Ничего не найдено</p>
           </div>
         ) : (
-          <div className="products">
+          <div className="products-catalog">
             <PostsList
               isLoadingProducts={isLoadingProducts}
               products={products}
@@ -100,7 +100,7 @@ export const Catalog = styled(CatalogContainer)`
     gap: 20px;
   }
 
-  & .products {
+  & .products-catalog {
     min-width: 1300px;
   }
 

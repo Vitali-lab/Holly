@@ -45,7 +45,7 @@ export const PostsList = styled(PostsListContainer)`
   justify-content: flex-start;
   align-items: flex-start;
   gap: 34px;
-  margin-left: 50px;
+
   padding: 10px 0 0px;
 
   & .open-filters {
