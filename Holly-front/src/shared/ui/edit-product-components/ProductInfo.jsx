@@ -40,7 +40,7 @@ const ProductInfoContainer = ({
 
     try {
       setIsUploading(true);
-      const res = await fetch(`${API_URL}/uploads/create`, {
+      const res = await fetch(`http://90.156.211.91/uploads/create`, {
         method: 'POST',
         body: formData,
       });
