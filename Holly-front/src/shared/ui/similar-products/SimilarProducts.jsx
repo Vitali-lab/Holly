@@ -28,14 +28,16 @@ export const SimilarProducts = styled(SimilarProductsContainer)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: min(1000px, 100%);
-  padding: 0 20px;
-  margin: 50px 0 50px 0;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 clamp(12px, 4vw, 32px);
+  margin: 50px 0;
   border-radius: 20px;
   background-color: var(--white-color);
   & h1 {
     text-align: center;
-    font-size: 40px;
+    font-size: clamp(22px, 4vw, 34px);
+    margin-bottom: 20px;
   }
 
   & .nothing {
@@ -46,33 +48,18 @@ export const SimilarProducts = styled(SimilarProductsContainer)`
     font-size: 20px;
     font-weight: 600;
     margin-top: 50px;
-    width: 1600px;
-  }
-
-  @media (max-width: 1600px) {
-    & .nothing {
-      width: 100%;
-    }
-  }
-
-  @media (max-width: 1200px) {
-    & .nothing {
-      width: 100%;
-    }
+    width: 100%;
   }
 
   @media (max-width: 768px) {
-    & .nothing {
-      width: 100%;
-    }
+    margin: 30px 0;
   }
 
   @media (max-width: 450px) {
-    width: min(400px, 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
+    padding: 0 12px;
+    & h1 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
   }
 `;

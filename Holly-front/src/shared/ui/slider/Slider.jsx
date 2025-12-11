@@ -51,6 +51,7 @@ export const ProductsSlider = styled(ProductsSliderContainer)`
   width: 100%;
   max-width: 1450px;
   margin: 0 auto;
+  padding: 0 clamp(12px, 4vw, 32px);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -64,20 +65,22 @@ export const ProductsSlider = styled(ProductsSliderContainer)`
   }
 
   & .slick-prev {
-    left: -60px;
+    left: clamp(-40px, -4vw, -20px);
   }
 
   & .slick-next {
-    right: -60px;
+    right: clamp(-40px, -4vw, -20px);
   }
 
   & .slick-slider {
     width: 100%;
+    max-width: 100%;
   }
 
   & .slick-list {
     overflow: hidden;
     margin: 0 auto;
+    padding: 0 4px;
   }
 
   & .slick-prev:before,
@@ -92,6 +95,8 @@ export const ProductsSlider = styled(ProductsSliderContainer)`
   }
 
   & .slick-slide {
+    display: flex;
+    justify-content: center;
     padding: 0 10px;
     box-sizing: border-box;
   }
@@ -100,13 +105,16 @@ export const ProductsSlider = styled(ProductsSliderContainer)`
     display: flex;
     justify-content: center;
     flex-direction: row;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 16px;
     margin: 20px 0;
+    width: 100%;
   }
 
   & .slide {
     margin: 0 auto;
-    max-width: 300px;
+    width: min(320px, 100%);
+    max-width: 100%;
     padding: 8px;
     box-sizing: border-box;
     cursor: pointer;
@@ -128,33 +136,33 @@ export const ProductsSlider = styled(ProductsSliderContainer)`
     border-radius: 8px;
   }
 
-  @media (max-width: 1200px) {
-    & .slick-slider {
-      width: 100%;
-      max-width: 1000px;
-    }
-  }
-
-  @media (max-width: 992px) {
-    & .slick-slider {
-      width: 100%;
-      max-width: 800px;
-    }
-  }
-
   @media (max-width: 768px) {
     & .slick-slider {
       width: 100%;
-      max-width: 600px;
+      max-width: 100%;
+    }
+
+    & .slick-prev,
+    & .slick-next {
+      display: none;
     }
   }
 
   @media (max-width: 576px) {
-    width: max(300px, 100%);
+    width: 100%;
+    padding: 0 10px;
     & .slick-slider {
       width: 100%;
-      max-width: 300px;
-      margin-bottom: 50px;
+      max-width: 100%;
+      margin-bottom: 40px;
+    }
+
+    & .slick-list {
+      padding: 0;
+    }
+
+    & .products-slider {
+      gap: 12px;
     }
   }
 `;

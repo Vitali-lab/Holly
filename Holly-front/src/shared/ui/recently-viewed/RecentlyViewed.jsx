@@ -27,14 +27,15 @@ export const RecentlyViewed = styled(RecentlyViewedContainer)`
   justify-content: center;
   align-items: center;
   width: 100%;
-  max-width: 1000px;
-  padding: 0 10px;
+  max-width: 1200px;
+  padding: 0 clamp(12px, 4vw, 32px);
   background-color: var(--white-color);
   margin: 50px 0 50px 0;
 
   & h1 {
     text-align: center;
-    font-size: 40px;
+    font-size: clamp(22px, 4vw, 34px);
+    margin-bottom: 20px;
   }
 
   & .nothing {
@@ -48,32 +49,29 @@ export const RecentlyViewed = styled(RecentlyViewedContainer)`
     width: 100%;
   }
 
+  & .products {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
   & .products-slide {
     width: 100%;
     margin: 20px 0 0 0;
   }
 
-  @media (max-width: 500px) {
-    padding: 0;
-    h2 {
-      font-size: 20px;
-    }
-    & .slide {
-      width: 100%;
-      max-width: 400px;
-    }
-    & .slide img {
-      height: 300px;
-    }
+  @media (max-width: 768px) {
+    margin: 30px 0;
   }
-  @media (max-width: 400px) {
-    width: min(390px, 100%);
-    & .slide {
-      width: 100%;
-      max-width: 390px;
-    }
-    & .slide img {
-      height: 200px;
+
+  @media (max-width: 480px) {
+    padding: 0 12px;
+    & h1 {
+      font-size: 22px;
+      margin-bottom: 12px;
     }
   }
 `;
