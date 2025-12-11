@@ -50,7 +50,7 @@ if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-app.use("/api/uploads", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
+app.use("/api", createUploadRoutes({ rootDir: __dirname, uploadsDir }));
 app.use("/api/products", productRouter);
 app.use("/api", userRouter);
 app.use("/api/seasons", seasonRouter);
