@@ -70,7 +70,7 @@ app.get(/^\/(?!api).*/, (req, res) => {
 });
 
 mongoose
-  .connect("mongodb://vitali:mongopass@localhost:27017")
+  .connect(process.env.MONGO_URL)
   // process.env.MONGO_URL
   .then(() => {
     app.listen(port, "0.0.0.0", () => {
