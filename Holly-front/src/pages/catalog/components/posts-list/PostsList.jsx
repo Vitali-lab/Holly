@@ -78,7 +78,7 @@ export const PostsList = styled(PostsListContainer)`
     gap: 30px;
 
     & .filter-card {
-      padding: 60px;
+      padding: 30px;
     }
   }
 
@@ -90,8 +90,8 @@ export const PostsList = styled(PostsListContainer)`
     }
   }
   @media (max-width: 1300px) {
-    width: min(1280px, 100%);
-    gap: 5px;
+    width: max(100px, 100%);
+    gap: 30px;
     & .filter-card {
       padding: 60px;
     }

@@ -132,6 +132,7 @@ export const Main = styled(MainContainer)`
       width: 90%;
     }
     & .collections {
+      flex-direction: row;
       width: 100%;
       height: 400px;
     }

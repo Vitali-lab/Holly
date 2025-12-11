@@ -190,8 +190,6 @@ position: relative;
     padding: 0px;
     overflow: hidden;
     
-    
-
        & img{
         width: 100%;
         height: 340px;
@@ -256,44 +254,43 @@ position: relative;
  }
 
   @media (max-width: 1600px) {
-
+   
     & .post{
-        width: 280px;
-        height: 490px;
+        width: 300px;
+        height: 570px;
         & img{
-          height: 400px;
+          height: 430px;
         }   
 }
 
  @media (max-width: 1550px) {
 
     & .post{
-        width: 250px;
-        height: 550px;
+        width: 300px;
+        height: 570px;
         & img{
-          height: 400px;
-        }
+          height: 430px;
+        }  
 }
         
 }
  @media (max-width: 1385px) {
  gap: 20px;
-    & .post{
-        width: 250px;
-        height: 540px;
+     & .post{
+        width: 280px;
+        height: 570px;
         & img{
-          height: 400px;
-        }
+          height: 430px;
+        }  
 }
-}
-@media (max-width: 1200px) {
+@media (max-width: 1300px) {
 
     & .post{
-        width: 250px;
-        height: 490px;
+        width: 230px;
+        height: 420px;
         & img{
-          height: 400px;
-        }
+          height: 300px;
+        } 
 }
         
     

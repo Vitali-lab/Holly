@@ -66,16 +66,18 @@ const CatalogContainer = ({ className }) => {
             setIsOpenFilters={setIsOpenFilters}
           />
         </div>
-        {totalCount === 0 ? (
+        {totalCount === 0 || products.length === 0 ? (
           <div className="nothing">
             <p>Ничего не найдено</p>
           </div>
         ) : (
-          <PostsList
-            isLoadingProducts={isLoadingProducts}
-            products={products}
-            setIsOpenFilters={setIsOpenFilters}
-          />
+          <div className="products">
+            <PostsList
+              isLoadingProducts={isLoadingProducts}
+              products={products}
+              setIsOpenFilters={setIsOpenFilters}
+            />
+          </div>
         )}
       </div>
       <Pagination changePage={changePage} currentPage={currentPage} lastPage={lastPage} />
@@ -91,10 +93,15 @@ export const Catalog = styled(CatalogContainer)`
 
   & .products-container {
     display: flex;
-
+    width: 100%;
+    max-width: 1300px;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 20px;
+  }
+
+  & .products {
+    min-width: 1300px;
   }
 
   & .nothing {
@@ -160,11 +167,16 @@ export const Catalog = styled(CatalogContainer)`
 
   @media (max-width: 1300px) {
     & .products-container {
+      width: max(500px, 100%);
       gap: 0px;
+      margin: 0 auto;
     }
     & .filters-container {
       position: static;
       top: 10px;
+    }
+    & .products {
+      min-width: 70%;
     }
   }
 
@@ -208,6 +220,9 @@ export const Catalog = styled(CatalogContainer)`
       flex-direction: column;
       justify-content: center;
       align-items: center;
+    }
+    & .products {
+      min-width: 430px;
     }
     & .filters-container {
       position: static;
