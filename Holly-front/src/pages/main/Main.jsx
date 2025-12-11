@@ -39,122 +39,112 @@ const MainContainer = ({ className }) => {
 };
 
 export const Main = styled(MainContainer)`
-width: 100%;
-border-radius: 10px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 30px;
-margin: 0 auto;
-
- & h1 {
-   text-align: center;
-   font-size: 40px;
- }
-
-& .main-collections{ 
-  margin: 50px 0;
-}
-
-& .presentation {
-margin-top: 60px;
-position: relative;
-width: 100%;
-height: 200px;
-background-color: transparent;
-border-radius: 30px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24) inset;
- & img{
-   width: 100%;
-  height: 900px;
-  border-radius: 30px;
-  
- }
-  & h2 {
-position: absolute;
-  bottom: 40px;
-  left: 50px;
-  font-size: 90px;
-  color:white;
-  text-shadow: 0px 1px 10px rgba(0,0,0,0.6);
- }
-
-}
-
-& .bolck{
-width: 100%;
-height: 700px;
-background-color: transparent;
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: start;
-
-& .new-producrs{
-position: relative;
-width: 58%;
-height: 600px;
-background-color: transparent;
-border-radius: 30px;
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24) inset;
- & h2 {
- position: absolute;
- bottom: 10px;
- left: 50px;
- font-size: 40px;
- }
- & img{
   width: 100%;
-  height: 600px;
-  border-radius: 30px;
-  object-fit: cover;
-  
-  
-}
-}
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin: 0 auto;
 
+  & h1 {
+    text-align: center;
+    font-size: 40px;
+  }
 
-@ media (max-width: 1800px) {
-  & .new-producrs{
+  & .main-collections {
+    margin: 50px 0;
+  }
+
+  & .presentation {
+    margin-top: 60px;
+    position: relative;
     width: 100%;
+    height: 200px;
+    background-color: transparent;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24) inset;
+    & img {
+      width: 100%;
+      height: 900px;
+      border-radius: 30px;
+    }
+    & h2 {
+      position: absolute;
+      bottom: 40px;
+      left: 50px;
+      font-size: 90px;
+      color: white;
+      text-shadow: 0px 1px 10px rgba(0, 0, 0, 0.6);
+    }
   }
-  & .collections{
+
+  & .bolck {
     width: 100%;
-    height: 400px;
+    height: 700px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
   }
-}
-@ media (max-width: 1300px) {
-  & .new-producrs{
-    width: 90%;
+  & .new-producrs {
+    position: relative;
+    width: 58%;
+    height: 600px;
+    background-color: transparent;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24) inset;
+    & h2 {
+      position: absolute;
+      bottom: 10px;
+      left: 50px;
+      font-size: 40px;
+    }
+    & img {
+      width: 100%;
+      height: 600px;
+      border-radius: 30px;
+      object-fit: cover;
+    }
   }
-  & .collections{
-    width: 100%;
-    height: 400px;
-  }
-}
-  @ media (max-width: 500px) {
-  h1 {
-    font-size: 20px;
-  }
-    & .new-producrs{
+
+  @media (max-width: 1800px) {
+    & .new-producrs {
       width: 100%;
     }
-    & .collections{
+    & .collections {
       width: 100%;
       height: 400px;
     }
   }
+  @media (max-width: 1300px) {
+    & .new-producrs {
+      width: 90%;
+    }
+    & .collections {
+      width: 100%;
+      height: 400px;
+    }
+  }
+  @media (max-width: 430px) {
+    margin: 100px 0;
 
-
-
-
+    & .new-producrs {
+      width: 90%;
+    }
+    & .collections {
+      width: 90%;
+      height: 500px;
+    }
+  }
 `;

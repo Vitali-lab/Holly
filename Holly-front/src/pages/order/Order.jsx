@@ -188,7 +188,7 @@ export const Order = styled(OrderContainer)`
   width: 100%;
   position: relative;
   height: 100vh;
-  z-index: 1000;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,6 +254,29 @@ export const Order = styled(OrderContainer)`
     padding: 10px;
     img {
       width: 150px;
+    }
+  }
+
+  @media (max-width: 430px) {
+    & .complite-order {
+      z-index: 10;
+      width: 430px;
+      padding: 0;
+      padding-bottom: 140px;
+    }
+    & .delivery {
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 390px) {
+    & .complite-order {
+      z-index: 10;
+      width: 390px;
+      padding: 0;
+      padding-bottom: 140px;
+    }
+    & .delivery {
+      flex-direction: column;
     }
   }
 `;

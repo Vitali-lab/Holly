@@ -157,12 +157,12 @@ gap:20px;
     width: 100%;
     font-size: 12px;
 }
-    @media (max-width: 450px) {
-    width: min(390px, 100%);
+    @media (max-width: 430px) {
+    width: min(430px, 100%);
     font-size: 12px;
     margin: 100px 0;
     & .favorites {
-        width: min(390px, 100%);
+        width: min(430px, 100%);
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
@@ -172,7 +172,8 @@ gap:20px;
         
     }
     & .no-auth {
-    width: max(390px, 100%);
+    width: max(430px, 100%);
+    padding: 0px;
     }   
 }
 `;

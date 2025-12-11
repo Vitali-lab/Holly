@@ -309,14 +309,30 @@ position: relative;
         } 
 }
 }
-    @media (max-width: 500px) {
+    @media (max-width: 430px) {
     flex-direction: row;
     display: flex;
     & .post{
-    width: 175px;
-    height: 380px;
+    width: 210px;
+    height: 480px;
+    border-radius:0px;
     & img{
-      height: 240px;
+      height: 340px;
+      border-radius:0px;
+    }
+    }
+    
+    }
+     @media (max-width: 390px) {
+    flex-direction: row;
+    display: flex;
+    & .post{
+    width: 190px;
+    height: 450px;
+    border-radius:0px;
+    & img{
+      height: 340px;
+      border-radius:0px;
     }
     }
     

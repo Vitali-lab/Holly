@@ -64,10 +64,13 @@ export const RecentlyViewed = styled(RecentlyViewedContainer)`
   }
 
   @media (max-width: 768px) {
+    max-width: 100%;
     margin: 30px 0;
   }
 
   @media (max-width: 480px) {
+    display: none;
+    max-width: 100%;
     padding: 0 12px;
     & h1 {
       font-size: 22px;

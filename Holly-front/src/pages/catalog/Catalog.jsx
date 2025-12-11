@@ -91,7 +91,7 @@ export const Catalog = styled(CatalogContainer)`
 
   & .products-container {
     display: flex;
-    min-width: 1300px;
+
     justify-content: flex-start;
     align-items: flex-start;
     gap: 20px;
@@ -185,6 +185,46 @@ export const Catalog = styled(CatalogContainer)`
     width: 100%;
     & .products-container {
       width: max(450px, 100%);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    & .filters-container {
+      position: static;
+      top: 10px;
+    }
+
+    & .nothing {
+      width: 100%;
+    }
+    & .pagination {
+      margin: 20px 0;
+    }
+  }
+  @media (max-width: 430px) {
+    max-width: 100%;
+    & .products-container {
+      width: max(430px, 100%);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    & .filters-container {
+      position: static;
+      top: 10px;
+    }
+
+    & .nothing {
+      width: 100%;
+    }
+    & .pagination {
+      margin: 20px 0;
+    }
+  }
+  @media (max-width: 390px) {
+    max-width: 100%;
+    & .products-container {
+      width: max(390px, 100%);
       flex-direction: column;
       justify-content: center;
       align-items: center;

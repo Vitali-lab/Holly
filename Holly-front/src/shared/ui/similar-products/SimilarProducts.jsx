@@ -56,6 +56,7 @@ export const SimilarProducts = styled(SimilarProductsContainer)`
   }
 
   @media (max-width: 450px) {
+    display: none;
     padding: 0 12px;
     & h1 {
       font-size: 22px;

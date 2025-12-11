@@ -155,12 +155,11 @@ export const NavigateBar = styled(NavigateBarContainer)`
       & a {
         text-decoration: none;
         color: var(--black-color);
-        border: 1px solid var(--main-color);
         padding: 10px 20px;
         width: 100px;
         border-radius: 10px;
-        font-weight: 500;
-        font-size: 19px;
+        font-weight: 700;
+        font-size: 23px;
       }
     }
   }

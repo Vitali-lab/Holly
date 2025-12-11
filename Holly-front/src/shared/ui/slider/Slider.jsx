@@ -95,6 +95,7 @@ export const ProductsSlider = styled(ProductsSliderContainer)`
   }
 
   & .slick-slide {
+    width: 100px;
     display: flex;
     justify-content: center;
     padding: 0 10px;

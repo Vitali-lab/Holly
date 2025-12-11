@@ -80,7 +80,7 @@ export const MainWidget = styled(MainWidgetContainer)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 150px;
+
     padding: 0px;
     height: 400px;
     border-radius: 10px;

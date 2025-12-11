@@ -247,9 +247,10 @@ export const Product = styled(ProductContainer)`
     }
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 430px) {
+    margin: 60px auto;
     .product-main {
-      width: min(390px, 100%);
+      width: min(430px, 100%);
       margin: 0 auto;
       flex-direction: column;
       align-items: center;

@@ -69,10 +69,9 @@ app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(frontDir, "index.html"));
 });
 
-console.log(__dirname);
-
 mongoose
   .connect(process.env.MONGO_URL)
+
   .then(() => {
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server started on port ${port}`);

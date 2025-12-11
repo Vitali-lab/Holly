@@ -78,7 +78,12 @@ export const App = styled(AppContainer)`
     box-shadow: none;
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 430px) {
+    width: min(430px, 100%);
+    margin-top: 10px;
+    padding: 0px;
+  }
+  @media (max-width: 390px) {
     width: min(390px, 100%);
     margin-top: 10px;
     padding: 0px;

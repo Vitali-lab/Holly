@@ -116,11 +116,16 @@ export const PostsList = styled(PostsListContainer)`
     }
   }
 
-  @media (max-width: 450px) {
+  @media (max-width: 430px) {
     margin: 0px auto;
-    width: min(360px, 100%);
-    gap: 6px;
-    & .filter-card {
+    width: min(430px, 100%);
+    justify-content: center;
+    gap: 3px;
+    & .open-filters {
+      display: flex;
+      position: absolute;
+      top: 130px;
+      left: 10px;
     }
   }
 `;

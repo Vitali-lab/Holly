@@ -38,7 +38,7 @@ const ControlPanelContainer = ({ className, setIsAuthOpen }) => {
         <Search />
       </div>
       <div className="logo-header">
-        <Logo width="250px" height="100px" />
+        <Logo width="250px" height="110px" />
       </div>
       <div className="icons-header">
         <div className="favorites">
@@ -123,96 +123,94 @@ const ControlPanelContainer = ({ className, setIsAuthOpen }) => {
 };
 
 export const ControlPanel = styled(ControlPanelContainer)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: end;
+  width: 100%;
+  height: 80px;
+  margin: 0 auto;
 
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: end;
-width: 100%;
-height: 80px;
-margin: 0 auto;
-
-& .user-icon{
-width: 20px;
-height: 20px;
-border-radius: 50%;
-background-color: #f5f5f5be;
-color: var(--gray-color);
-display: flex;
-cursor: pointer;
-border: 3px solid #494949ff;
-justify-content: center;
-align-items: center;
-font-size: 20px;
-font-weight: 700;
-}
-&  i {
-cursor: pointer;
-}
-
-& .search-header{
-width: 32%;
-display: flex;
-flex-direction: row;
-justify-content: center;
-gap: 10px;
-align-items: center;
-    
-    & p{
-        font-size: 15px;
-        color: var(--black-color);
-        margin: 0px;
-    }
-    &:hover{
-        cursor: pointer;
-    }
-}
- & .icons-header{
-     width: 32%;
-     display: flex;
-     flex-direction: row;
-     justify-content: center;
-     align-items: flex-end;
-     gap: 55px;
-      
- } 
-
- 
-
- & .logo-header{
-   width: 32%;
-   display: flex;
-   flex-direction: row;
-   justify-content: center;
-   align-items: center;
-   position: relative;
-   top: 20px;
-   left: -20px;
-   
- }  
- & .favorites ,.shopping-bag, .catr, .sign-out, .user-icon{
-     display: flex;
-     flex-direction: column;
-     font-size: 13px;
-     justify-content: center;
-     align-items: center;
-     position: relative;
-     
-     & p{
-       position: absolute;
-       margin: 0px;
-       top: 35px;
-       color: var(--black-color);
-     }
-     
-     
+  & .user-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #f5f5f5be;
+    color: var(--gray-color);
+    display: flex;
+    cursor: pointer;
+    border: 3px solid #494949ff;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
   }
-   
+  & i {
+    cursor: pointer;
+  }
+
+  & .search-header {
+    width: 32%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+
+    & p {
+      font-size: 15px;
+      color: var(--black-color);
+      margin: 0px;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  & .icons-header {
+    width: 32%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 65px;
+  }
+
+  & .logo-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 10px;
+  }
+  & .favorites,
+  .shopping-bag,
+  .catr,
+  .sign-out,
+  .user-icon {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    & p {
+      position: absolute;
+      margin: 0px;
+      top: 35px;
+      color: var(--black-color);
+    }
+  }
+
   & .shopping-bag {
-     cursor: pointer;
-     position: relative;
+    cursor: pointer;
+    position: relative;
   }
-  & .admin-panel{
+  & .admin-panel {
     position: fixed;
     cursor: pointer;
     top: 10px;
@@ -220,107 +218,84 @@ align-items: center;
     & a {
       margin: 0px;
       text-decoration: none;
-  
+    }
   }
-  }   
 
-  & .admin-menu{
-  position: relative;
-  width: 130px;
-  height: 20px;
-  padding: 5px;
-  border-radius: 10px  0  0 10px;
-  background-color: var(--black-color);
-  color: var(--white-color);
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-      
-  
-
-  @ media (max-width: 1800px) {
-    width: 100%;
+  & .admin-menu {
+    position: relative;
+    width: 130px;
+    height: 20px;
+    padding: 5px;
+    border-radius: 10px 0 0 10px;
+    background-color: var(--black-color);
+    color: var(--white-color);
+    display: flex;
+    justify-content: end;
+    align-items: center;
     font-size: 12px;
-    & .search-header{
-        width: 100%;
-    }
-    & .icons{
-        width: 100%;
-    }
-    & .logo{
-        width: 100%;
-    }
+    font-weight: 700;
+    cursor: pointer;
   }
 
-   @media (max-width: 1200px) {
-   display: flex;
-   flex-direction: column;
-   position: fixed;
-   width: 100%;
-   left: 0px;
-   top: -30px;
-   
-   & .search-header{
-   display: none;
-   }
-    & .icons-header{
-    position: fixed; 
-    bottom: 0px;
-    height: 70px;
-    background-color: var(--white-color);
+  @media (max-width: 1200px) {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 15px;
-    gap: 190px;
+    flex-direction: column;
+    position: fixed;
     width: 100%;
-    & p{
-      font-size: 15px;
-      color: var(--black-color);
-      margin: 0px;
+    left: 0px;
+    top: -30px;
+
+    & .search-header {
+      display: none;
     }
-      & i{
-      font-size: 25px;
-      color: var(--black-color);
-      }
-    }
-    & .logo-header{
-    background-color: var(--white-color);
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    top: 35px;
-    }
-  }
-    @media (max-width: 768px) {
-      
-    }
-      @media (max-width: 450px) {
-      width: min(390px, 100%);
-      right: 0px;
-      & .icons-header{
-      width: min(390px, 100%);
+    & .icons-header {
+      position: fixed;
+      bottom: 0px;
+      height: 70px;
+      background-color: var(--white-color);
       display: flex;
-      right: 0px;
       flex-direction: row;
       justify-content: center;
       align-items: center;
-        gap: 70px;
+      padding-bottom: 15px;
+      gap: 190px;
+      width: 100%;
+      & p {
+        font-size: 15px;
+        color: var(--black-color);
+        margin: 0px;
       }
-        & .admin-menu{
-        width: min(100px, 100%);
-        font-size: 10px;
-        right: 10px;
-        top: 0px;
-        }
+      & i {
+        font-size: 25px;
+        color: var(--black-color);
+      }
     }
-     
-
+    & .logo-header {
+      background-color: var(--white-color);
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      top: 35px;
+    }
+  }
+  @media (max-width: 768px) {
+  }
+  @media (max-width: 430px) {
+    width: min(430px, 100%);
+    right: 0px;
+    & .icons-header {
+      position: fixed;
+      right: 0px;
+      bottom: 0px;
+      gap: 80px;
+    }
+    & .admin-menu {
+      width: min(100px, 100%);
+      font-size: 10px;
+      right: 10px;
+      top: 0px;
+    }
+  }
 `;
