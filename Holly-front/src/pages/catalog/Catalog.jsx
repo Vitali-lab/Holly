@@ -101,7 +101,7 @@ export const Catalog = styled(CatalogContainer)`
   }
 
   & .products-catalog {
-    min-width: 1300px;
+    min-width: 1000px;
   }
 
   & .nothing {
@@ -165,24 +165,31 @@ export const Catalog = styled(CatalogContainer)`
     pointer-events: none;
   }
 
-  @media (max-width: 1300px) {
+  @media (max-width: 1400px) {
     & .products-container {
       width: max(500px, 100%);
       gap: 0px;
       margin: 0 auto;
     }
     & .filters-container {
-      position: static;
+      position: sticky;
       top: 10px;
     }
-    & .products {
-      min-width: 70%;
+    & .products-catalog {
+      min-width: 910px;
     }
   }
 
-  @media (max-width: 992px) {
+  @media (max-width: 1300px) {
     & .products-container {
       gap: 32px;
+    }
+    & .filters-container {
+      position: static;
+      top: 10px;
+    }
+    & .products-catalog {
+      min-width: 810px;
     }
   }
 
@@ -221,7 +228,7 @@ export const Catalog = styled(CatalogContainer)`
       justify-content: center;
       align-items: center;
     }
-    & .products {
+    & .products-catalog {
       min-width: 430px;
     }
     & .filters-container {
@@ -236,7 +243,7 @@ export const Catalog = styled(CatalogContainer)`
       margin: 20px 0;
     }
   }
-  @media (max-width: 390px) {
+  @media (max-width: 400px) {
     max-width: 100%;
     & .products-container {
       width: max(390px, 100%);
@@ -247,6 +254,9 @@ export const Catalog = styled(CatalogContainer)`
     & .filters-container {
       position: static;
       top: 10px;
+    }
+    & .products-catalog {
+      min-width: 390px;
     }
 
     & .nothing {

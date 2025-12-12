@@ -20,6 +20,7 @@ const FavoritesContainer = ({ className }) => {
   const userFavorites = products.filter((product) => {
     return currentUser?.favorites.find((fav) => fav.id === product.id);
   });
+  console.log(userFavorites);
 
   return (
     <>
@@ -31,7 +32,7 @@ const FavoritesContainer = ({ className }) => {
       )}
 
       <div className={className}>
-        <h1>Избранное</h1>
+        <h1>Избранное 💗</h1>
 
         {!currentUser && (
           <div className="no-auth">
@@ -43,14 +44,14 @@ const FavoritesContainer = ({ className }) => {
           </div>
         )}
 
-        {currentUser && currentUser.favorites.length === 0 && (
+        {currentUser && userFavorites.length === 0 && (
           <div className="no-auth">
             <p>Вы еще ничего не добавили в избранное</p>
             <p>Добавьте товары в избранное, чтобы не потерять :)</p>
           </div>
         )}
 
-        {currentUser && currentUser.favorites.length > 0 && (
+        {currentUser && userFavorites.length > 0 && (
           <div className="favorites">
             {userFavorites.map((post) => (
               <ProductCard key={post.id} post={post} />
@@ -63,57 +64,56 @@ const FavoritesContainer = ({ className }) => {
 };
 
 export const Favorites = styled(FavoritesContainer)`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-flex-wrap: wrap;
-padding: 0px;
-gap: 20px;
-width: 95%;
-background-color: var(--white-color);
-margin: 0px auto;
- h1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0px;
+  gap: 20px;
+  width: 100%;
+  background-color: var(--white-color);
+  margin: 0px auto;
+  h1 {
     margin-bottom: 10px;
   }
 
-& .no-auth{
-width:100%;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-text-align: center;
-padding: 20px;
-font-weight: bold;
- & p {
-  color: var(--grey-color);
-  font-size: 16px;
-  font-weight: 400;
- }
-  & h1{
-  margin: 0;
+  & .no-auth {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    & p {
+      color: var(--grey-color);
+      font-size: 16px;
+      font-weight: 400;
+    }
+    & h1 {
+      margin: 0;
+    }
+    & span {
+      cursor: pointer;
+      color: var(--main-color);
+      text-decoration: underline;
+      font-weight: 600;
+    }
   }
-  & span{
-    cursor: pointer;
-    color: var(--main-color);
-    text-decoration: underline;
-    font-weight: 600;
+
+  & .favorites {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 100px;
   }
-}
 
-
-& .favorites {
-display: flex;
-width: 100%;
-flex-direction: row;
-justify-content: start;
-align-items: center;
-flex-wrap: wrap;
-gap:20px;
-}
-
-& .alert{
+  & .alert {
     width: 700px;
     display: flex;
     flex-direction: row;
@@ -122,11 +122,9 @@ gap:20px;
     text-align: center;
     padding: 20px;
     font-weight: bold;
-}
+  }
 
-
-
-& .like-products{
+  & .like-products {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -136,44 +134,49 @@ gap:20px;
     margin: 20px 0 0 0;
     cursor: pointer;
     & img {
-        width: 300px;
-        height: 450px;}
-        }
+      width: 300px;
+      height: 450px;
+    }
+  }
 
-
-@ media (max-width: 1500px) {
+  @media (max-width: 1600px) {
+    & .favorites {
+      width: 100%;
+      min-width: 1200px;
+      gap: 20px;
+    }
+  }
+  @media (max-width: 1300px) {
+    & .favorites {
+      width: 100%;
+      min-width: 900px;
+      gap: 50px;
+    }
+  }
+  @media (max-width: 992px) {
     width: 100%;
     font-size: 12px;
-}
-    @media (max-width: 1200px) {
+  }
+  @media (max-width: 768px) {
     width: 100%;
     font-size: 12px;
-}
-    @media (max-width: 992px) {
-    width: 100%;
-    font-size: 12px;
-}
-    @media (max-width: 768px) {
-    width: 100%;
-    font-size: 12px;
-}
-    @media (max-width: 430px) {
+  }
+  @media (max-width: 430px) {
     width: min(430px, 100%);
     font-size: 12px;
     margin: 100px 0;
     & .favorites {
-        width: min(430px, 100%);
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        justify-content: start;
-        align-items: center;
-        gap: 10px;
-        
+      width: min(430px, 100%);
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: start;
+      align-items: center;
+      gap: 10px;
     }
     & .no-auth {
-    width: max(430px, 100%);
-    padding: 0px;
-    }   
-}
+      width: max(430px, 100%);
+      padding: 0px;
+    }
+  }
 `;

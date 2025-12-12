@@ -136,7 +136,6 @@ export const UserCabinet = styled(UserCabinetContainer)`
     border-radius: 20px;
     padding: 30px;
     margin-bottom: 30px;
-    box-shadow: var(--box-shadow);
   }
 
   & .welcome-section {
@@ -183,14 +182,15 @@ export const UserCabinet = styled(UserCabinetContainer)`
   }
 
   & .stat-card {
-    background: var(--main-color);
+    background: var(--white-color);
     border-radius: 15px;
     width: 100%;
     padding: 20px;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 15px;
-    color: white;
+    color: black;
     transition: transform 0.3s ease;
 
     &:hover {
@@ -199,6 +199,8 @@ export const UserCabinet = styled(UserCabinetContainer)`
 
     & .stat-icon {
       font-size: 29px;
+      border-right: 1px solid var(--main-color);
+      padding-right: 15px;
     }
 
     & .stat-info {
@@ -213,10 +215,9 @@ export const UserCabinet = styled(UserCabinetContainer)`
       }
 
       & .stat-label {
-        & p {
-          font-size: 20px;
-          margin: 0;
-        }
+        font-size: 17px;
+        margin: 0;
+        color: var(--grey-color);
       }
     }
   }

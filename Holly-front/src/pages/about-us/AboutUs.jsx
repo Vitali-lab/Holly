@@ -51,7 +51,7 @@ const AboutUsContainer = ({ className }) => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="main-title"
           >
-            О нас
+            О нас 🌸
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -169,7 +169,7 @@ export const AboutUs = styled(AboutUsContainer)`
 
     .main-title {
       text-align: center;
-      font-size: 4rem;
+      font-size: 50px;
       font-weight: 700;
       color: rgba(52, 52, 52, 0.95);
       margin-bottom: 24px;

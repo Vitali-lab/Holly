@@ -35,7 +35,7 @@ const CartContainer = ({ className }) => {
     return (
       <div className={className}>
         <div className="no-auth">
-          <h1>Корзина</h1>
+          <h1>Корзина 🛒</h1>
           <p>Ваша корзина пуста :(</p>
           <Button
             onClick={() => {
@@ -43,7 +43,7 @@ const CartContainer = ({ className }) => {
             }}
             width={'300'}
           >
-            Вперед за покупками!
+            Вперед за покупками 🛍️
           </Button>
         </div>
       </div>
@@ -73,7 +73,7 @@ const CartContainer = ({ className }) => {
 
   return (
     <div className={className}>
-      <h1>Корзина</h1>
+      <h1>Корзина 🛒</h1>
       <div className="cart">
         <div className="cart-list">
           {productAtCart.map((item) => {

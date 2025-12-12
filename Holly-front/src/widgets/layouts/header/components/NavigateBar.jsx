@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { Icon } from '../../../../shared/ui';
 import { useState } from 'react';
@@ -30,34 +30,18 @@ const NavigateBarContainer = ({ className }) => {
         />
         {isOpenBurgerMenu && (
           <div className="burger-menu-list">
-            <NavLink
-              className={({ isActive }) => (isActive ? 'active' : '')}
-              to={'/'}
-              onClick={() => setIsOpenBurgerMenu(false)}
-            >
+            <Link to={'/'} onClick={() => setIsOpenBurgerMenu(false)}>
               Главная
-            </NavLink>
-            <NavLink
-              className={({ isActive }) => (isActive ? 'active' : '')}
-              to={'/catalog'}
-              onClick={() => setIsOpenBurgerMenu(false)}
-            >
+            </Link>
+            <Link to={'/catalog'} onClick={() => setIsOpenBurgerMenu(false)}>
               Каталог
-            </NavLink>
-            <NavLink
-              className={({ isActive }) => (isActive ? 'active' : '')}
-              to={'/about-us'}
-              onClick={() => setIsOpenBurgerMenu(false)}
-            >
+            </Link>
+            <Link to={'/about-us'} onClick={() => setIsOpenBurgerMenu(false)}>
               О нас
-            </NavLink>
-            <NavLink
-              className={({ isActive }) => (isActive ? 'active' : '')}
-              to={'/delivery'}
-              onClick={() => setIsOpenBurgerMenu(false)}
-            >
+            </Link>
+            <Link to={'/delivery'} onClick={() => setIsOpenBurgerMenu(false)}>
               Доставка
-            </NavLink>
+            </Link>
           </div>
         )}
       </div>
@@ -76,10 +60,6 @@ export const NavigateBar = styled(NavigateBarContainer)`
   background-color: var(--white-color);
   padding: 0;
 
-  & .burger-menu {
-    display: none;
-  }
-
   & .header-navigate {
     display: flex;
     flex-direction: row;
@@ -97,26 +77,17 @@ export const NavigateBar = styled(NavigateBarContainer)`
       font-weight: 500;
       font-size: 14px;
     }
-  }
-
-  & .active {
-    font-weight: 600;
-    color: var(--main-color);
-    animation: active ease 0.5s;
-
-    & a {
-      text-decoration: none;
-      color: black;
-      font-weight: 500;
-      font-size: 14px;
-      padding: 5px 0;
-      border-bottom: 0px solid #000;
-    }
-
-    & a.active {
+    & .active {
       font-weight: 600;
+      color: var(--main-color);
+      animation: active ease 0.5s;
     }
   }
+
+  & .burger-menu {
+    display: none;
+  }
+
   @media (max-width: 1200px) {
     position: fixed;
     top: 0px;

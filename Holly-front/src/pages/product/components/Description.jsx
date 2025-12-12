@@ -4,7 +4,7 @@ const DescriptionContainer = ({ className, product }) => {
   if (!product?.description) {
     return (
       <div className={className}>
-        <h2>Описание</h2>
+        <h2>Описание 📝</h2>
         <div className="description empty">Описание отсутствует</div>
       </div>
     );
@@ -12,7 +12,7 @@ const DescriptionContainer = ({ className, product }) => {
 
   return (
     <div className={className}>
-      <h2>Описание</h2>
+      <h2>Описание 📝</h2>
       <div className="description">{product.description}</div>
     </div>
   );

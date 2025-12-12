@@ -33,7 +33,7 @@ const CommentsContainer = ({ className, product }) => {
 
   return (
     <div className={className}>
-      <h2>Отзывы</h2>
+      <h2>Отзывы 💬</h2>
       {comments.length > 0 ? (
         commentPagination().map((user) => (
           <div className="comment" key={user.userId + user.date}>

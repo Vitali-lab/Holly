@@ -232,7 +232,7 @@ export const Filtration = styled(FiltrationContainer)`
   @media (max-width: 1300px) {
     & .filter-card {
       position: static;
-      width: 70%;
+      width: 90%;
     }
   }
 

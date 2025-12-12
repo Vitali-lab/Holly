@@ -274,7 +274,7 @@ position: relative;
 }
         
 }
- @media (max-width: 1385px) {
+ @media (max-width: 1400px) {
  gap: 20px;
      & .post{
         width: 280px;

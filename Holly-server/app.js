@@ -22,6 +22,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:5174",
   "http://localhost:3005",
   "http://90.156.211.91",
   "http://90.156.211.91:80",
@@ -71,7 +72,8 @@ app.get(/^\/(?!api).*/, (req, res) => {
 
 mongoose
   .connect(process.env.MONGO_URL)
-  // process.env.MONGO_URL
+  // process.env.MONGO_URL -prod
+  //"mongodb://vitali:mongopass@localhost:27017" -dev
   .then(() => {
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server started on port ${port}`);

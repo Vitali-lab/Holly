@@ -38,7 +38,7 @@ const PostsListContainer = ({ className, products, isLoadingProducts, setIsOpenF
 };
 
 export const PostsList = styled(PostsListContainer)`
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -83,7 +83,6 @@ export const PostsList = styled(PostsListContainer)`
   }
 
   @media (max-width: 1440px) {
-    width: min(1180px, 100%);
     margin: 0 15px;
     & .filter-card {
       padding: 40px;
