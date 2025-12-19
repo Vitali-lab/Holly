@@ -71,11 +71,12 @@ app.get(/^\/(?!api).*/, (req, res) => {
 
 mongoose
   .connect(process.env.MONGO_URL)
-  // process.env.MONGO_URL -prod
-  //"mongodb://vitali:mongopass@localhost:27017" -dev
   .then(() => {
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server started on port ${port}`);
     });
   })
   .catch((err) => console.error(err));
+
+// process.env.MONGO_URL -prod
+//"mongodb://vitali:mongopass@localhost:27017" -dev

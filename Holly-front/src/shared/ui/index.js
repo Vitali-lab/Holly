@@ -10,6 +10,7 @@ export * from './rating/Rating';
 export * from './price/Price';
 export * from './sizes/Sizes';
 export * from './select/Select';
+export * from './WinterSnow/WinterSnow';
 export * from './similar-products/SimilarProducts';
 export * from './modal-window/ModalWindow';
 export * from './raring-stars/RatingStars';

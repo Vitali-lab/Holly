@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { addSeason, getSeasons, deleteSeason } from "../controllers/seasons.js";
 import { mapSeasons } from "../helpers/mapSeasons.js";
 

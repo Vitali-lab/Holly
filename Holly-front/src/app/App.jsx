@@ -7,7 +7,7 @@ import { fetchCategories } from '../features/categories/categories';
 import { fetchAllProducts } from '../features/products/products';
 import { fetchUser } from '../features/user/user';
 import { fetchSeasons } from '../features/seasons/seasons';
-import { ScrollTopButton } from '../shared/ui/scroll-top-button/ScrollTopButton';
+import { ScrollTopButton, WinterSnow } from '../shared/ui';
 import styled from 'styled-components';
 
 const AppContainer = ({ className }) => {
@@ -26,6 +26,7 @@ const AppContainer = ({ className }) => {
 
   return (
     <>
+      <WinterSnow />
       <div className={className}>
         <ToastContainer />
         <Header />
