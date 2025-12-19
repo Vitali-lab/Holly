@@ -26,8 +26,8 @@ const AppContainer = ({ className }) => {
 
   return (
     <>
-      <WinterSnow color="var(--main-color)" count={80} />
       <div className={className}>
+        <WinterSnow />
         <ToastContainer />
         <Header />
         <AppRouter />
