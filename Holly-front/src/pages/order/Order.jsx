@@ -1,124 +1,120 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Input, ModalWindow } from '../../shared/ui';
-import { emptyCart } from '../../features/user/user';
-import { allProductsSelector, userSelector } from '../../entities/selectors';
-import { updateProduct } from '../../features/products/products';
-import { postOrder } from '../../features/orders/orders';
-import { useProductAtCart } from '../../shared/hooks/use-product-at-cart';
-import { notifyError } from '../../shared/lib/notification';
-import styled from 'styled-components';
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { Button, Input } from "../../components";
+import { postN8n } from "../../bff/api/back-end/post-n8n";
+import { useNavigate } from "react-router-dom";
+import { ModalWindow } from "../../components/modal-window/ModalWindow";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../../actions/clear-cart";
+import { postOrders } from "../../bff/api/post-orders";
+import { updateProductSize } from "../../bff/api/patch-product-sizes";
+import styled from "styled-components";
+import { emptyCart } from "../../bff/api/back-end/clear-cart";
+import { del, p } from "framer-motion/client";
+import {
+  ordersSelector,
+  productsSelector,
+  userSelector,
+} from "../../selectors";
 
 const OrderContainer = ({ className }) => {
   const { orderId } = useParams();
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
-  const [patronymic, setPatronymic] = useState('');
-  const [surname, setSurname] = useState('');
-  const [deliveryMethod, setDeliveryMethod] = useState('');
-  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const order = useSelector(ordersSelector);
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
+  const [patronymic, setPatronymic] = useState("");
+  const [surname, setSurname] = useState("");
+  const [deliveryMethod, setDeliveryMethod] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  console.log(order);
+
   const currentUser = useSelector(userSelector);
-  const { allProducts } = useSelector(allProductsSelector);
-  const { productAtCart, finishPrice } = useProductAtCart();
+  const products = useSelector(productsSelector);
 
   const onSubmit = () => {
     const complitedOrder = {
-      orderNum: orderId,
+      orderNum: order.orderNum,
       userId: currentUser.id,
       userEmail: email,
       userPhone: phone,
       userName: name,
       userPatronymic: patronymic,
       userSurname: surname,
-      status: 'created',
+      status: "created",
       deliveryMethod: deliveryMethod,
       deliveryAddress: deliveryAddress,
-      products: productAtCart,
-      sum: finishPrice(),
+      products: order.products,
     };
-    if (
-      !email ||
-      !phone ||
-      !name ||
-      !patronymic ||
-      !surname ||
-      !deliveryMethod ||
-      !deliveryAddress
-    ) {
-      notifyError('Заполните все поля и выберите способ доставки');
-      return;
-    }
-    currentUser.cart.forEach((item) => {
-      const product = allProducts.find((product) => product.id === item.productId);
-      const upProduct = {
-        ...product,
-        sizes: {
-          ...product.sizes,
-          [item.size]: product.sizes[item.size] - item.count,
-        },
-      };
-      dispatch(updateProduct({ productId: upProduct.id, updatedProduct: upProduct }));
-    });
-    dispatch(postOrder(complitedOrder));
-    dispatch(emptyCart(currentUser.id));
-    // postN8n(complitedOrder)
-    setShowModal(true);
-    setTimeout(() => {
-      navigate('/');
-    }, 3000);
+    postOrders(complitedOrder);
+    postN8n(complitedOrder)
+      .then(() => {
+        setShowModal(true);
+        setError("");
+        updateProductSize(order.products);
+        setTimeout(() => {
+          navigate("/");
+          dispatch(emptyCart(currentUser.id));
+        }, 5000);
+      })
+      .catch((err) => {
+        setShowModal(true);
+        setError(err.message);
+      });
   };
 
   return (
     <div className={className}>
       {showModal && (
-        <ModalWindow setOpenModal={setShowModal}>
-          <div className="order-modal">
-            <h2>{`Спасибо за заказ!🥳`}</h2>
-            <p>за статусом заказа можно следить в вашем профиле</p>
-            <p>через 3 секунды вы будете перенаправлены на главную</p>
-          </div>
+        <ModalWindow
+          text={error}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        >
+          {error ? <p>{error}</p> : <p>Заказ успешно отправлен</p>}
         </ModalWindow>
       )}
       <div className="complite-order">
         <h2> Заказ номер {orderId}</h2>
-        <div className="order-inputs">
-          <p>Введите данные</p>
+        <div>
+          <p>Проверьте данные</p>
           <Input
             value={email}
-            placeholder={'email'}
+            text={"email"}
             onChange={(e) => {
               setEmail(e.target.value);
             }}
           />
           <Input
             value={phone}
-            placeholder={'Телефон'}
+            text={"Телефон"}
             onChange={(e) => {
               setPhone(e.target.value);
             }}
           />
           <Input
             value={surname}
-            placeholder={'Фамилия'}
+            text={"Фамилия"}
             onChange={(e) => {
               setSurname(e.target.value);
             }}
           />
           <Input
             value={name}
-            placeholder={'Имя'}
+            text={"Имя"}
             onChange={(e) => {
               setName(e.target.value);
             }}
           />
           <Input
             value={patronymic}
-            placeholder={'Отчество'}
+            text={"Отчество"}
             onChange={(e) => {
               setPatronymic(e.target.value);
             }}
@@ -128,51 +124,55 @@ const OrderContainer = ({ className }) => {
         <div className="delivery">
           <div
             className={
-              deliveryMethod === 'Доставка по минску' ? 'delivery-item-active' : 'delivery-item'
+              deliveryMethod === "Доставка по минску"
+                ? "delivery-item-active"
+                : "delivery-item"
             }
             onClick={() => {
-              setDeliveryMethod('Доставка по минску');
+              setDeliveryMethod("Доставка по минску");
             }}
           >
             <p>Доставка по Минску</p>
           </div>
           <div
-            className={deliveryMethod === 'Европочта' ? 'delivery-item-active' : 'delivery-item'}
+            className={
+              deliveryMethod === "Европочта"
+                ? "delivery-item-active"
+                : "delivery-item"
+            }
             onClick={() => {
-              setDeliveryMethod('Европочта');
+              setDeliveryMethod("Европочта");
             }}
           >
-            <img
-              src={'https://europemall.by/wp-content/uploads/2022/08/logo.91bd432c-895x160.png'}
-              alt="euroPost"
-            />
+            <p>Европочта</p>
           </div>
           <div
-            className={deliveryMethod === 'Белпочта' ? 'delivery-item-active' : 'delivery-item'}
+            className={
+              deliveryMethod === "Белпочта"
+                ? "delivery-item-active"
+                : "delivery-item"
+            }
             onClick={() => {
-              setDeliveryMethod('Белпочта');
+              setDeliveryMethod("Белпочта");
             }}
           >
-            <img
-              src={'https://export.by/upload/company/2017/01/18/13689/50026-1485180237.png'}
-              alt="belPost"
-            />
+            <p>Белпочта</p>
           </div>
         </div>
         <div>
-          {deliveryMethod === 'Доставка по минску' && <p>Доставка по Минску</p>}
-          {deliveryMethod === 'Европочта' && <p>Доставка по Европочте</p>}
-          {deliveryMethod === 'Белпочта' && <p>Доставка по Белпочте</p>}
+          {deliveryMethod === "Доставка по минску" && <p>Доставка по Минску</p>}
+          {deliveryMethod === "Европочта" && <p>Доставка по Европочте</p>}
+          {deliveryMethod === "Белпочта" && <p>Доставка по Белпочте</p>}
         </div>
         <div>
           <Input
             onChange={(e) => {
               setDeliveryAddress(e.target.value);
             }}
-            placeholder={
-              deliveryMethod === 'Доставка по минску'
-                ? 'Адрес доставки'
-                : 'Адрес и номер пункта выдачи '
+            text={
+              deliveryMethod === "Доставка по минску"
+                ? "Адрес доставки"
+                : "Адрес пункта выдачи"
             }
           />
         </div>
@@ -185,98 +185,87 @@ const OrderContainer = ({ className }) => {
 };
 
 export const Order = styled(OrderContainer)`
-  width: 100%;
-  position: relative;
-  height: 100vh;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-
-  & .order-inputs {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-  }
+  width: var(--page-width);
+  margin: 0 auto;
+  padding: 0;
 
   & .complite-order {
-    position: absolute;
-    top: 100px;
     display: flex;
-    width: 700px;
-    height: auto;
+    width: min(820px, 100%);
+    margin: 0 auto;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    box-shadow: var(--box-shadow);
-    border-radius: 10px;
-    padding: 20px;
-  }
-  & .delivery {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-    gap: 20px;
-  }
-  & .delivery-item {
-    width: 180px;
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid #ccccccff;
-    background-color: #dddddd6d;
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-    img {
-      width: 150px;
+    align-items: stretch;
+    gap: 24px;
+    padding: clamp(24px, 4vw, 48px);
+    border: 1px solid var(--line);
+    background-color: var(--surface);
+
+    & > div {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px 24px;
+
+      & p {
+        grid-column: 1 / -1;
+        margin: 0;
+        color: var(--grey-color);
+        font-size: 13px;
+      }
     }
-  }
-  & .delivery-item-active {
-    width: 180px;
-    height: 110px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border: 1px solid #ccccccff;
-    box-shadow: 0 0 10px #ccccccff;
-    border-radius: 10px;
-    padding: 10px;
-    img {
-      width: 150px;
+
+    & h2 {
+      margin: 0;
+      font-size: clamp(22px, 2.4vw, 30px);
     }
   }
 
-  @media (max-width: 430px) {
-    & .complite-order {
-      z-index: 10;
-      width: 430px;
-      padding: 0;
-      padding-bottom: 140px;
+  & .delivery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  & .delivery-item,
+  & .delivery-item-active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 10px;
+    border: 1px solid var(--line-strong);
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
+
+    & p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 12px;
     }
-    & .delivery {
-      flex-direction: column;
+
+    &:hover {
+      border-color: var(--ink);
     }
   }
-  @media (max-width: 390px) {
-    & .complite-order {
-      z-index: 10;
-      width: 390px;
-      padding: 0;
-      padding-bottom: 140px;
+
+  & .delivery-item-active {
+    border-color: var(--ink);
+    background-color: var(--ink);
+
+    & p {
+      color: var(--paper);
     }
+  }
+
+  @media (max-width: 768px) {
+    & .complite-order > div {
+      grid-template-columns: 1fr;
+    }
+
     & .delivery {
-      flex-direction: column;
+      grid-template-columns: 1fr;
     }
   }
 `;

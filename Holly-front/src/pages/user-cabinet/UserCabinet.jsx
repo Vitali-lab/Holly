@@ -1,481 +1,367 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchOrders } from '../../features/orders/orders';
-import { userOrdersSelector, userSelector } from '../../entities/selectors';
-import { ComplitedUserOrders } from './components/ComplitedOrders';
-import { UnprocessedUserOrders } from './components/UnprocessedOrders';
-import styled from 'styled-components';
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { Icon } from "../../components/icon/Icon";
+import { Button } from "../../components/button/Button";
+import { getUserOrders } from "../../bff/api/get-user-orders";
+import { correctDate } from "../../utils/correctDate";
+import { userOrdersSelector, userSelector } from "../../selectors";
+import { pluralize } from "../../utils/pluralize";
 
 const UserCabinetContainer = ({ className }) => {
   const currentUser = useSelector(userSelector);
+  const userOrders = useSelector(userOrdersSelector);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const ordersStatus = {
+    created: "Создан",
+    confirmed: "Подтверждён",
+    delivery: "Доставка",
+    completed: "Выполнен",
+  };
 
   useEffect(() => {
-    dispatch(fetchOrders(currentUser?.id));
+    if (currentUser?.id) {
+      dispatch(getUserOrders(currentUser.id));
+    }
   }, [dispatch, currentUser?.id]);
-
-  const orders = useSelector(userOrdersSelector);
-  const userOrders = orders.filter((order) => order.userId === currentUser?.id);
 
   if (!currentUser) {
     return (
       <div className={className}>
-        <div className="auth-required">
-          <div className="auth-icon">🔐</div>
-          <h2>Вход в аккаунт</h2>
-          <p>Войдите в систему, чтобы просмотреть свои заказы</p>
+        <header className="cabinet-header">
+          <p className="eyebrow">Личный кабинет</p>
+          <h1>Сначала войдите</h1>
+        </header>
+        <div className="empty">
+          <p>После входа здесь появятся ваши заказы и избранные вещи.</p>
+          <Button width="260px" onClick={() => navigate("/catalog")}>
+            Перейти в каталог
+          </Button>
         </div>
       </div>
     );
   }
 
+  const cartCount = (currentUser.cart || []).length;
+  const favoritesCount = (currentUser.favorites || []).length;
+
   return (
     <div className={className}>
-      <div className="user-header">
-        <div className="welcome-section">
-          <div className="user-avatar">
-            <span>{currentUser.name.charAt(0).toUpperCase()}</span>
-          </div>
-          <div className="user-info">
-            <h1>Добро пожаловать, {currentUser.name}!</h1>
-            <p>Здесь вы можете отслеживать свои заказы и историю покупок</p>
+      <header className="cabinet-header">
+        <p className="eyebrow">Личный кабинет</p>
+        <h1>Здравствуйте, {currentUser.name}</h1>
+      </header>
+
+      <div className="profile">
+        <div className="profile-main">
+          <span className="profile-avatar">{currentUser.name.slice(0, 1)}</span>
+          <div>
+            <p className="profile-name">{currentUser.name}</p>
+            <p className="profile-email">{currentUser.email}</p>
           </div>
         </div>
-        <div className="stats-section">
-          <div className="stat-card">
-            <div className="stat-icon">📦</div>
-            <div className="stat-info">
-              <span className="stat-number">{userOrders.length}</span>
-              <p className="stat-label">Всего заказов</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">🚚</div>
-            <div className="stat-info">
-              <span className="stat-number">
-                {
-                  userOrders.filter(
-                    (order) =>
-                      order.status === 'created' ||
-                      order.status === 'confirmed' ||
-                      order.status === 'delivery'
-                  ).length
-                }
-              </span>
-              <p className="stat-label">В работе</p>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">✅</div>
-            <div className="stat-info">
-              <span className="stat-number">
-                {userOrders.filter((order) => order.status === 'completed').length}
-              </span>
-              <p className="stat-label">Завершено</p>
-            </div>
-          </div>
+
+        <div className="profile-links">
+          <button type="button" onClick={() => navigate("/favorites")}>
+            <Icon id="heart-o" size="16" color="currentColor" />
+            <span>Избранное</span>
+            <b>{favoritesCount}</b>
+          </button>
+          <button type="button" onClick={() => navigate("/cart")}>
+            <Icon id="shopping-bag" size="16" color="currentColor" />
+            <span>Корзина</span>
+            <b>{cartCount}</b>
+          </button>
+          <button type="button" onClick={() => navigate("/catalog")}>
+            <Icon id="search" size="16" color="currentColor" />
+            <span>Каталог</span>
+            <b>→</b>
+          </button>
         </div>
       </div>
 
-      {userOrders.length > 0 ? (
-        <div className="orders-section">
-          <UnprocessedUserOrders userOrders={userOrders} />
-          <ComplitedUserOrders userOrders={userOrders} />
+      <section className="orders">
+        <div className="orders-header">
+          <h2>Ваши заказы</h2>
+          <span>
+            {userOrders.length}{" "}
+            {pluralize(userOrders.length, ["заказ", "заказа", "заказов"])}
+          </span>
         </div>
-      ) : (
-        <div className="empty-orders">
-          <div className="empty-icon">🛒</div>
-          <h2>У вас пока нет заказов</h2>
-          <p>Перейдите в каталог и сделайте свой первый заказ!</p>
-          <button className="shop-button" onClick={() => (window.location.href = '/catalog')}>
-            Перейти в каталог
-          </button>
-        </div>
-      )}
+
+        {userOrders.length > 0 ? (
+          <div className="orders-list">
+            {userOrders.map((item) => (
+              <article key={item.orderNum} className="order">
+                <div className="order-number">
+                  <p>Заказ</p>
+                  <b>№ {item.orderNum}</b>
+                </div>
+                <div className="order-info">
+                  <p>Дата</p>
+                  <b>{correctDate(item.createdAt)}</b>
+                </div>
+                <div className="order-info">
+                  <p>Статус</p>
+                  <span className={`status status-${item.status}`}>
+                    {ordersStatus[item.status] || item.status}
+                  </span>
+                </div>
+                <div className="order-total">
+                  <p>Сумма</p>
+                  <b>{item.sum ? `${item.sum} руб.` : "—"}</b>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="empty">
+            <p>У вас пока нет заказов. Самое время это исправить.</p>
+            <Button width="260px" onClick={() => navigate("/catalog")}>
+              Смотреть каталог
+            </Button>
+          </div>
+        )}
+      </section>
     </div>
   );
 };
 
 export const UserCabinet = styled(UserCabinetContainer)`
-  width: 100%;
-  max-width: 1200px;
-  padding: 20px;
-  background: var(--background-color);
+  width: var(--page-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vw, 48px);
 
-  & .auth-required {
+  & .cabinet-header {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line-strong);
+
+    & .eyebrow {
+      margin-bottom: 14px;
+    }
+
+    & h1 {
+      margin: 0;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.1;
+    }
+  }
+
+  & .profile {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(24px, 3vw, 36px);
+    background-color: var(--paper-deep);
+  }
+
+  & .profile-main {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  & .profile-avatar {
+    display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
-    text-align: center;
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-
-    & .auth-icon {
-      font-size: 4rem;
-      margin-bottom: 20px;
-    }
-
-    & h2 {
-      font-size: 2rem;
-      color: var(--black-color);
-      margin-bottom: 10px;
-    }
-
-    & p {
-      color: var(--grey-color);
-      font-size: 1.1rem;
-    }
+    width: 64px;
+    height: 64px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 26px;
   }
 
-  & .user-header {
-    background: var(--white-color);
-    border-radius: 20px;
-    padding: 30px;
-    margin-bottom: 30px;
+  & .profile-name {
+    margin: 0;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.2vw, 26px);
   }
 
-  & .welcome-section {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
-
-    & .user-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: var(--main-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 2rem;
-      font-weight: 700;
-      box-shadow: var(--box-shadow);
-    }
-
-    & .user-info {
-      & h1 {
-        font-size: 25px;
-        color: var(--black-color);
-        margin-bottom: 10px;
-        font-weight: 700;
-      }
-
-      & p {
-        color: var(--grey-color);
-        font-size: 20px;
-        margin: 0;
-      }
-    }
+  & .profile-email {
+    margin: 4px 0 0;
+    color: var(--grey-color);
+    font-size: 12px;
   }
 
-  & .stats-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
+  & .profile-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
 
-  & .stat-card {
-    background: var(--white-color);
-    border-radius: 15px;
-    width: 100%;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    color: black;
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-    }
-
-    & .stat-icon {
-      font-size: 29px;
-      border-right: 1px solid var(--main-color);
-      padding-right: 15px;
-    }
-
-    & .stat-info {
+    & button {
       display: flex;
       flex-direction: column;
-
-      & .stat-number {
-        font-size: 30px;
-        font-weight: 700;
-        line-height: 1;
-        margin-bottom: 2px;
-      }
-
-      & .stat-label {
-        font-size: 17px;
-        margin: 0;
-        color: var(--grey-color);
-      }
-    }
-  }
-
-  & .empty-orders {
-    background: white;
-    border-radius: 20px;
-    padding: 60px 40px;
-    text-align: center;
-    box-shadow: var(--box-shadow);
-
-    & .empty-icon {
-      font-size: 30px;
-      margin-bottom: 20px;
-    }
-
-    & h2 {
-      font-size: 25px;
-      color: var(--black-color);
-      margin-bottom: 10px;
-    }
-
-    & p {
-      color: var(--grey-color);
-      font-size: 25px;
-      margin-bottom: 30px;
-    }
-
-    & .shop-button {
-      background: var(--main-color);
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 25px;
-      font-size: 1rem;
-      font-weight: 600;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line-strong);
+      background-color: transparent;
+      color: var(--ink);
+      text-align: left;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
 
       &:hover {
-        transform: translateY(-2px);
+        border-color: var(--ink);
+        background-color: var(--surface);
+      }
+
+      & span {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      & b {
+        color: var(--grey-color);
+        font-size: 12px;
+        font-weight: 500;
       }
     }
   }
 
-  & .orders-section {
+  & .orders {
     display: flex;
     flex-direction: column;
-    gap: 30px;
   }
 
-  @media (max-width: 1024px) {
-    & .user-header {
-      padding: 25px;
+  & .orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line-strong);
+
+    & h2 {
+      margin: 0;
+      font-size: clamp(24px, 2.6vw, 32px);
     }
 
-    & .welcome-section {
-      flex-direction: column;
-      text-align: center;
-      gap: 15px;
+    & span {
+      color: var(--grey-color);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
   }
 
-  @media (max-width: 768px) {
-    padding: 15px;
+  & .orders-list {
+    display: flex;
+    flex-direction: column;
+  }
 
-    & .user-header {
-      padding: 20px;
+  & .order {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 0.9fr 0.8fr;
+    gap: 20px;
+    align-items: center;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+
+    & p {
+      margin: 0 0 4px;
+      color: var(--grey-color);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
-    & .welcome-section {
-      & .user-avatar {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
-      }
+    & b {
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
 
-      & .user-info h1 {
-        font-size: 1.8rem;
-      }
+  & .order-number b {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 400;
+  }
+
+  & .order-total {
+    text-align: right;
+  }
+
+  & .status {
+    display: inline-flex;
+    padding: 5px 10px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  & .status-completed {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  & .status-created {
+    border-color: var(--red-color);
+    color: var(--red-color);
+  }
+
+  & .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-top: 24px;
+    padding: clamp(28px, 4vw, 52px);
+    background-color: var(--paper-deep);
+  }
+
+  & .empty p {
+    max-width: 460px;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.3;
+    color: var(--ink);
+  }
+
+  @media (max-width: 992px) {
+    & .profile {
+      grid-template-columns: 1fr;
+      align-items: stretch;
     }
 
-    & .stats-section {
-      gap: 15px;
+    & .order {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
 
-    & .stat-card {
-      padding: 15px;
-
-      & .stat-icon {
-        font-size: 1.5rem;
-      }
-
-      & .stat-info .stat-number {
-        font-size: 1.5rem;
-      }
-    }
-
-    & .empty-orders {
-      padding: 40px 20px;
-
-      & .empty-icon {
-        font-size: 3rem;
-      }
-
-      & h2 {
-        font-size: 1.5rem;
-      }
+    & .order-total {
+      text-align: left;
     }
   }
 
   @media (max-width: 576px) {
-    padding: 12px;
-
-    & .user-header {
-      padding: 15px;
-      margin-bottom: 20px;
+    & .profile-links {
+      grid-template-columns: 1fr;
     }
 
-    & .welcome-section .user-info h1 {
-      font-size: 16px;
-    }
-
-    & .stat-card {
-      padding: 12px;
-
-      & .stat-info .stat-number {
-        font-size: 18px;
-      }
-    }
-
-    & .empty-orders {
-      padding: 30px 15px;
-
-      & h2 {
-        font-size: 1.3rem;
-      }
-
-      & .shop-button {
-        padding: 12px 24px;
-        font-size: 0.9rem;
-      }
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: min(400px, 96%);
-    padding: 0px;
-    margin: 120px auto;
-    margin-bottom: 100px;
-    & .user-header {
-      padding: 12px;
-    }
-
-    & .welcome-section {
-      & .user-avatar {
-        width: 50px;
-        height: 50px;
-        font-size: 19px;
-      }
-
-      & .user-info h1 {
-        font-size: 25px;
-      }
-
-      & .user-info p {
-        font-size: 14px;
-      }
-    }
-
-    & .stats-section {
-      gap: 10px;
-    }
-    & .stat-label {
-      font-size: 10px;
-    }
-    & .stat-card {
-      flex-direction: column;
-      text-align: center;
-      padding: 10px;
-
-      & .stat-icon {
-        margin-bottom: 5px;
-      }
-    }
-
-    & .auth-required {
-      padding: 30px 20px;
-
-      & .auth-icon {
-        font-size: 3rem;
-      }
-
-      & h2 {
-        font-size: 1.5rem;
-      }
-    }
-  }
-
-  @media (max-width: 320px) {
-    padding: 8px;
-
-    & .user-header {
-      padding: 10px;
-      margin-bottom: 15px;
-    }
-
-    & .welcome-section {
-      & .user-avatar {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1rem;
-      }
-
-      & .user-info h1 {
-        font-size: 1.2rem;
-      }
-
-      & .user-info p {
-        font-size: 0.9rem;
-      }
-    }
-
-    & .stat-card {
-      padding: 12px 8px;
-
-      & .stat-info .stat-number {
-        font-size: 1.1rem;
-      }
-
-      & .stat-info .stat-label {
-        font-size: 0.8rem;
-      }
-    }
-
-    & .empty-orders {
-      padding: 25px 10px;
-
-      & .empty-icon {
-        font-size: 2.5rem;
-      }
-
-      & h2 {
-        font-size: 1.2rem;
-      }
-
-      & .shop-button {
-        padding: 10px 20px;
-        font-size: 0.8rem;
-      }
-    }
-
-    & .auth-required {
-      padding: 25px 15px;
-
-      & h2 {
-        font-size: 1.3rem;
-      }
+    & .order {
+      grid-template-columns: 1fr;
+      gap: 12px;
     }
   }
 `;

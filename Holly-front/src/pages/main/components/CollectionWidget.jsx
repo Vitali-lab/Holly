@@ -1,33 +1,48 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line no-unused-vars
-import { AnimatePresence, motion } from 'framer-motion';
-import { seasonsSelector, allProductsSelector } from '../../../entities/selectors';
-import { acSetFilterSeason } from '../../../features/products/productsSlice';
-import { COLLECTION } from '../../../shared/config/appInfo';
-import Loader from '../../../shared/ui/loader/Loader';
-import styled from 'styled-components';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import Loader from "../../../components/loader/Loader";
+import { seasonSelector, productsSelector } from "../../../selectors/";
 
 const CollectionWidgetContainer = ({ className }) => {
-  const { allProducts, isLoading: allProductsIsLoading } = useSelector(allProductsSelector);
-  const { seasons, isLoading: seasonsIsLoading } = useSelector(seasonsSelector);
+  const products = useSelector(productsSelector);
+  const seasons = useSelector(seasonSelector);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [page, setPage] = useState(0);
-  const totalPages = 1;
-  const winterSeason = seasons?.find((s) => s.name === 'Зима');
-  const summerSeason = seasons?.find((s) => s.name === 'Лето');
-  const autumnSeason = seasons?.find((s) => s.name === 'Осень');
-  const springSeason = seasons?.find((s) => s.name === 'Весна');
 
-  const { winter, summer, autumn, spring } = COLLECTION(
-    allProducts,
-    winterSeason,
-    summerSeason,
-    autumnSeason,
-    springSeason
-  );
+  const collection = {
+    winter: {
+      name: "Зима",
+      products: products.filter(
+        (item) =>
+          item.seasonId === seasons.find((season) => season.name === "Зима").id,
+      ),
+    },
+    summer: {
+      name: "Лето",
+      products: products.filter(
+        (item) =>
+          item.seasonId === seasons.find((season) => season.name === "Лето").id,
+      ),
+    },
+    autumn: {
+      name: "Осень",
+      products: products.filter(
+        (item) =>
+          item.seasonId ===
+          seasons.find((season) => season.name === "Осень").id,
+      ),
+    },
+    spring: {
+      name: "Весна",
+      products: products.filter(
+        (item) =>
+          item.seasonId ===
+          seasons.find((season) => season.name === "Весна").id,
+      ),
+    },
+  };
 
   const widgetVariants = {
     hidden: {
@@ -37,17 +52,24 @@ const CollectionWidgetContainer = ({ className }) => {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
     },
     exit: {
       opacity: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
     },
   };
+
+  const [page, setPage] = useState(0);
+  const totalWinterPages = collection.winter.products.length;
+  const totalSummerPages = collection.summer.products.length;
+  const totalAutumnPages = collection.autumn.products.length;
+  const totalSpringPages = collection.spring.products.length;
+  const totalPages = 1;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -56,9 +78,12 @@ const CollectionWidgetContainer = ({ className }) => {
     return () => clearInterval(interval);
   }, [totalPages]);
 
-  if (allProductsIsLoading || seasonsIsLoading) {
+  console.log(collection);
+
+  if (!seasons || !products) {
     return <Loader />;
   }
+
   return (
     <div className={className}>
       <AnimatePresence mode="wait">
@@ -70,12 +95,11 @@ const CollectionWidgetContainer = ({ className }) => {
           animate="visible"
           exit="exit"
           onClick={() => {
-            navigate(`/catalog`);
-            dispatch(acSetFilterSeason(autumnSeason.id));
+            navigate(`/catalog?season=${"Осень"}`);
           }}
         >
-          <img src={autumn.products[page].images[0]} />
-          <h2>{autumn.name}</h2>
+          <img src={collection.autumn.products[page].images[0]} />
+          <h2>{collection.autumn.name}</h2>
         </motion.div>
       </AnimatePresence>
       <AnimatePresence mode="wait">
@@ -87,12 +111,11 @@ const CollectionWidgetContainer = ({ className }) => {
           animate="visible"
           exit="exit"
           onClick={() => {
-            navigate(`/catalog`);
-            dispatch(acSetFilterSeason(summerSeason.id));
+            navigate(`/catalog?season=${"Лето"}`);
           }}
         >
-          <img src={summer?.products[page].images[0]} />
-          <h2>{summer.name}</h2>
+          <img src={collection.summer.products[page].images[0]} />
+          <h2>{collection.summer.name}</h2>
         </motion.div>
       </AnimatePresence>
       <AnimatePresence mode="wait">
@@ -104,12 +127,11 @@ const CollectionWidgetContainer = ({ className }) => {
           animate="visible"
           exit="exit"
           onClick={() => {
-            navigate(`/catalog`);
-            dispatch(acSetFilterSeason(winterSeason.id));
+            navigate(`/catalog?season=${"Зима"}`);
           }}
         >
-          <img src={winter.products[page].images[0]} />
-          <h2>{winter.name}</h2>
+          <img src={collection.winter.products[page].images[0]} />
+          <h2>{collection.winter.name}</h2>
         </motion.div>
       </AnimatePresence>
       <AnimatePresence mode="wait">
@@ -121,12 +143,11 @@ const CollectionWidgetContainer = ({ className }) => {
           animate="visible"
           exit="exit"
           onClick={() => {
-            navigate(`/catalog`);
-            dispatch(acSetFilterSeason(springSeason.id));
+            navigate(`/catalog?season=${"Весна"}`);
           }}
         >
-          <img src={spring.products[page].images[0]} />
-          <h2>{spring.name}</h2>
+          <img src={collection.spring.products[page].images[0]} />
+          <h2>{collection.spring.name}</h2>
         </motion.div>
       </AnimatePresence>
     </div>
@@ -134,49 +155,44 @@ const CollectionWidgetContainer = ({ className }) => {
 };
 
 export const CollectionWidget = styled(CollectionWidgetContainer)`
+width: 100%;
+display: flex;
+flex-direction: row;
+justify-content: center;
+flex-wrap: wrap;
+align-items: center;
+gap: 30px;
+& .collections{
+cursor: pointer;
+position: relative;
+width: 280px;
+height: 400px;
+background-color: transparent;
+border-radius: 30px;
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24) inset;
+transition: all 0.3s ease-in-out;
+&:hover{
+  transform: scale(1.1);
+  
+}
+& h2 {
+ position: absolute;
+ bottom: 10px;
+ left: 50px;
+ font-size: 60px;
+ color:white;
+ text-shadow: 0px 1px 10px rgba(0,0,0,0.6);
+ }
+ & img{
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  & .collections {
-    cursor: pointer;
-    position: relative;
-    width: 280px;
-    height: 400px;
-    background-color: transparent;
-    border-radius: 30px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24) inset;
-    transition: all 0.3s ease-in-out;
-    &:hover {
-      transform: scale(1.1);
-    }
-    & h2 {
-      position: absolute;
-      bottom: 10px;
-      left: 50px;
-      font-size: 60px;
-      color: white;
-      text-shadow: 0px 1px 10px rgba(0, 0, 0, 0.6);
-    }
-    & img {
-      width: 100%;
-      height: 100%;
-      border-radius: 30px;
-      object-fit: cover;
-    }
-  }
+  height: 100%;
+  border-radius: 30px;
+  object-fit: cover;
+  
+}
 
-  @media (max-width: 500px) {
-    flex-wrap: wrap;
-    & .collections {
-      width: 250px;
-      height: 400px;
-    }
-  }
 `;

@@ -1,182 +1,203 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { ProductCard } from '../../features/product/components/ProductCard';
-import { scrollTop } from '../../shared/utils/scrollTop';
-import { productsSelector, userSelector } from '../../entities/selectors';
-import { Auth, Registration } from '../../shared/ui';
-import styled from 'styled-components';
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { ProductCard } from "../../components/product-card/ProductCard";
+import { Button } from "../../components/button/Button";
+import { Icon } from "../../components/icon/Icon";
+import { useEffect } from "react";
+import { scrollTop } from "../../utils/scrollTop";
+import { productsSelector, userSelector } from "../../selectors";
+import { pluralize } from "../../utils/pluralize";
 
 const FavoritesContainer = ({ className }) => {
   const currentUser = useSelector(userSelector);
   const products = useSelector(productsSelector);
-
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     scrollTop();
   }, []);
 
+  if (!currentUser) {
+    return (
+      <div className={className}>
+        <header className="favorites-header">
+          <p className="eyebrow">Личное</p>
+          <h1>Избранное</h1>
+        </header>
+        <div className="empty">
+          <span className="empty-icon">
+            <Icon id="heart-o" size="28" color="currentColor" />
+          </span>
+          <p>Войдите в аккаунт, чтобы сохранять понравившиеся вещи.</p>
+          <Button width="280px" onClick={() => navigate("/catalog")}>
+            Перейти в каталог
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   const userFavorites = products.filter((product) => {
-    return currentUser?.favorites.find((fav) => fav.id === product.id);
+    return currentUser.favorites.find((fav) => fav.id === product.id);
   });
-  console.log(userFavorites);
 
   return (
-    <>
-      {isAuthOpen && (
-        <Auth setIsAuthOpen={setIsAuthOpen} setIsRegistrationOpen={setIsRegistrationOpen} />
+    <div className={className}>
+      <header className="favorites-header">
+        <div>
+          <p className="eyebrow">Личное</p>
+          <h1>Избранное</h1>
+        </div>
+        <div className="header-meta">
+          <span className="count">
+            {userFavorites.length}{" "}
+            {pluralize(userFavorites.length, ["вещь", "вещи", "вещей"])}
+          </span>
+          <button type="button" onClick={() => navigate("/catalog")}>
+            Продолжить покупки
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </header>
+
+      {userFavorites.length > 0 ? (
+        <div className="favorites">
+          {userFavorites.map((post) => (
+            <ProductCard key={post.id} post={post} />
+          ))}
+        </div>
+      ) : (
+        <div className="empty">
+          <span className="empty-icon">
+            <Icon id="heart-o" size="28" color="currentColor" />
+          </span>
+          <p>Пока здесь пусто. Отмечайте вещи сердечком — они появятся тут.</p>
+          <Button width="280px" onClick={() => navigate("/catalog")}>
+            Смотреть каталог
+          </Button>
+        </div>
       )}
-      {isRegistrationOpen && (
-        <Registration setIsRegistrationOpen={setIsRegistrationOpen} setIsAuthOpen={setIsAuthOpen} />
-      )}
-
-      <div className={className}>
-        <h1>Избранное 💗</h1>
-
-        {!currentUser && (
-          <div className="no-auth">
-            <p>
-              <span onClick={() => setIsRegistrationOpen(true)}>Зарегистрируйтесь</span> или{' '}
-              <span onClick={() => setIsAuthOpen(true)}>авторизируйтесь</span>, чтобы увидеть свои
-              любимые товары
-            </p>
-          </div>
-        )}
-
-        {currentUser && userFavorites.length === 0 && (
-          <div className="no-auth">
-            <p>Вы еще ничего не добавили в избранное</p>
-            <p>Добавьте товары в избранное, чтобы не потерять :)</p>
-          </div>
-        )}
-
-        {currentUser && userFavorites.length > 0 && (
-          <div className="favorites">
-            {userFavorites.map((post) => (
-              <ProductCard key={post.id} post={post} />
-            ))}
-          </div>
-        )}
-      </div>
-    </>
+    </div>
   );
 };
 
 export const Favorites = styled(FavoritesContainer)`
+  width: var(--page-width);
+  margin: 0 auto;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 0px;
-  gap: 20px;
-  width: 100%;
-  background-color: var(--white-color);
-  margin: 0px auto;
-  h1 {
-    margin-bottom: 10px;
-  }
+  flex-direction: column;
+  gap: clamp(24px, 3vw, 40px);
 
-  & .no-auth {
-    width: 100%;
+  & .favorites-header {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    font-weight: bold;
-    & p {
-      color: var(--grey-color);
-      font-size: 16px;
-      font-weight: 400;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line-strong);
+
+    & .eyebrow {
+      margin-bottom: 14px;
     }
+
     & h1 {
       margin: 0;
+      font-size: clamp(38px, 4.6vw, 62px);
+      line-height: 1;
     }
-    & span {
-      cursor: pointer;
-      color: var(--main-color);
-      text-decoration: underline;
+  }
+
+  & .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+
+    & .count {
+      color: var(--grey-color);
+      font-size: 10px;
       font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    & button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 0 4px;
+      border: none;
+      border-bottom: 1px solid var(--ink);
+      background: none;
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: gap 0.2s ease;
+
+      &:hover {
+        gap: 14px;
+      }
     }
   }
 
   & .favorites {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    justify-content: start;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 100px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(24px, 3vw, 44px) clamp(16px, 2.2vw, 32px);
   }
 
-  & .alert {
-    width: 700px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    font-weight: bold;
-  }
-
-  & .like-products {
+  & .empty {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: start;
+    align-items: flex-start;
+    gap: 18px;
+    padding: clamp(32px, 5vw, 64px);
+    background-color: var(--paper-deep);
+  }
+
+  & .empty-icon {
+    display: flex;
     align-items: center;
-    gap: 20px;
-    margin: 20px 0 0 0;
-    cursor: pointer;
-    & img {
-      width: 300px;
-      height: 450px;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    color: var(--ink);
+  }
+
+  & .empty p {
+    max-width: 420px;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.6vw, 30px);
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  @media (max-width: 992px) {
+    & .favorites {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (max-width: 1600px) {
-    & .favorites {
-      width: 100%;
-      min-width: 1200px;
-      gap: 20px;
-    }
-  }
-  @media (max-width: 1300px) {
-    & .favorites {
-      width: 100%;
-      min-width: 900px;
-      gap: 50px;
-    }
-  }
-  @media (max-width: 992px) {
-    width: 100%;
-    font-size: 12px;
-  }
-  @media (max-width: 768px) {
-    width: 100%;
-    font-size: 12px;
-  }
-  @media (max-width: 430px) {
-    width: min(430px, 100%);
-    font-size: 12px;
-    margin: 100px 0;
-    & .favorites {
-      width: min(430px, 100%);
-      display: flex;
+  @media (max-width: 576px) {
+    & .favorites-header {
       flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: start;
-      align-items: center;
-      gap: 10px;
+      align-items: flex-start;
+      gap: 16px;
     }
-    & .no-auth {
-      width: max(430px, 100%);
-      padding: 0px;
+
+    & .header-meta {
+      align-items: flex-start;
+    }
+
+    & .favorites {
+      gap: 28px 14px;
     }
   }
 `;

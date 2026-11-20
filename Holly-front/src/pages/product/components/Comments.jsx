@@ -1,64 +1,59 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Icon, RatingStars } from '../../../shared/ui';
-import { correctDate } from '../../../shared/utils/correctDate';
-import { fetchUsers } from '../../../features/user/user';
-import { usersSelector } from '../../../entities/selectors';
-import Loader from '../../../shared/ui/loader/Loader';
-import styled from 'styled-components';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { getUsers } from "../../../bff/api/back-end/get-users";
+import Loader from "../../../components/loader/Loader";
+import { RatingStars } from "../../../components/raring-stars/RatingStars";
+import { correctDate } from "../../../utils/correctDate";
 
 const CommentsContainer = ({ className, product }) => {
-  const dispatch = useDispatch();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    getUsers()
+      .then((data) => setUsers(data.data))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const [showAllComments, setShowAllComments] = useState(false);
-  const { users, isLoading } = useSelector(usersSelector);
+  if (loading) return <Loader />;
 
-  if (isLoading) return <Loader />;
+  const getUserName = (id) =>
+    users.find((user) => user.id === id)?.name || "Аноним";
 
-  const getUserName = (id) => users.find((user) => user.id === id)?.name || 'Аноним';
   const comments = product?.rating?.users || [];
-
-  const commentPagination = () => {
-    if (comments.length > 3 && !showAllComments) {
-      return comments.slice(0, 3);
-    } else if (comments.length > 3 && showAllComments) {
-      return comments;
-    }
-    return comments;
-  };
 
   return (
     <div className={className}>
-      <h2>Отзывы 💬</h2>
+      <p className="eyebrow">Отзывы</p>
+      <h2>
+        Что говорят
+        <span> ({comments.length})</span>
+      </h2>
+
       {comments.length > 0 ? (
-        commentPagination().map((user) => (
-          <div className="comment" key={user.userId + user.date}>
-            <div className="icon-and-name">
-              <Icon id="user" />
-              <p>{getUserName(user.userId)}</p>
-            </div>
-            <div className="comment-and-stars">
-              <div className="stars">
-                <RatingStars userRating={user.userRating} />
+        <div className="comments-list">
+          {comments.map((user) => (
+            <article className="comment" key={user.userId + user.date}>
+              <div className="icon-and-name">
+                <span className="avatar">{getUserName(user.userId).slice(0, 1)}</span>
+                <div>
+                  <p className="name">{getUserName(user.userId)}</p>
+                  <p className="date">{correctDate(user.date)}</p>
+                </div>
               </div>
-              <p className="text">{user.userComment}</p>
-            </div>
-            <div className="date">
-              <p>{correctDate(user.date)}</p>
-            </div>
-          </div>
-        ))
+              <div className="comment-and-stars">
+                <div className="stars">
+                  <RatingStars userRating={user.userRating} />
+                </div>
+                <p className="text">{user.userComment}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       ) : (
-        <div className="nothing">Пока нет отзывов :(</div>
-      )}
-      {comments.length > 3 && (
-        <Button onClick={() => setShowAllComments(!showAllComments)}>
-          {showAllComments ? 'Скрыть' : 'Показать все'}
-        </Button>
+        <div className="nothing">
+          Пока нет отзывов. Будьте первым, кто оценит эту вещь.
+        </div>
       )}
     </div>
   );
@@ -67,102 +62,91 @@ const CommentsContainer = ({ className, product }) => {
 export const Comments = styled(CommentsContainer)`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 95%;
-  margin: 40px 0;
-  padding: 20px;
-  box-shadow: var(--box-shadow);
-  border-radius: 12px;
-  gap: 20px;
-  background: var(--white-color);
-  transition: all 0.3s ease;
-  &:hover {
-    transform: translateY(-10px);
-  }
+  gap: 14px;
 
-  h2 {
-    font-size: 30px;
-    font-weight: 600;
+  & .eyebrow {
     margin: 0;
-    align-self: flex-start;
   }
 
-  .comment {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 95%;
-    border: 1px solid #abababff;
-    padding: 0 15px;
-    border-radius: 8px;
-    gap: 20px;
-    transition: background 0.3s ease;
+  & h2 {
+    margin: 0 0 8px;
+    font-size: clamp(24px, 2.4vw, 32px);
 
-    &:hover {
-      background: #fafafa;
+    & span {
+      color: var(--grey-color);
+      font-family: var(--font-body);
+      font-size: 14px;
     }
   }
 
-  .icon-and-name {
+  & .comments-list {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-    font-weight: 500;
+    flex-direction: column;
   }
 
-  .comment-and-stars {
-    flex: 3;
+  & .comment {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  & .icon-and-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  & .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 16px;
+  }
+
+  & .name {
+    margin: 0;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  & .date {
+    margin: 2px 0 0;
+    color: var(--grey-color);
+    font-size: 11px;
+  }
+
+  & .comment-and-stars {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    padding-left: 50px;
 
-    .stars {
-      display: flex;
-      gap: 6px;
-    }
-
-    .text {
+    & .text {
+      margin: 0;
+      color: var(--ink-soft);
       font-size: 14px;
-      color: #333;
-      line-height: 1.4;
+      line-height: 1.7;
     }
   }
 
-  .date {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    font-size: 12px;
-    color: #999;
-  }
-
-  .nothing {
-    font-size: 20px;
+  & .nothing {
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
     color: var(--grey-color);
-    text-align: center;
-    padding: 25px;
+    font-size: 13px;
   }
 
-  @media (max-width: 768px) {
-    .comment {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .date {
-      justify-content: flex-start;
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: min(350px, 100%);
-    .comment-and-stars {
-      .text {
-        font-size: 12px;
-      }
+  @media (max-width: 576px) {
+    & .comment-and-stars {
+      padding-left: 0;
     }
   }
 `;

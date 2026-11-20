@@ -1,25 +1,18 @@
-import { useEffect } from 'react';
-import { Icon } from '../../shared/ui';
-import { motion } from 'framer-motion';
-import { scrollTop } from '../../shared/utils/scrollTop';
-import {
-  DELIVERY_METHODS,
-  PAYMENTS_METHODS,
-  FAQ,
-  PHONE_NUMBER,
-  EMAIL,
-} from '../../shared/config/appInfo';
-import styled from 'styled-components';
+import styled from "styled-components";
+import { Icon } from "../../components/icon/Icon";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { scrollTop } from "../../utils/scrollTop";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 20 },
   visible: (i) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.2,
+      delay: i * 0.08,
       duration: 0.6,
-      ease: 'easeOut',
+      ease: "easeOut",
     },
   }),
 };
@@ -29,276 +22,370 @@ const DeliveryContainer = ({ className }) => {
     scrollTop();
   }, []);
 
+  const deliveryMethods = [
+    {
+      title: "Курьерская доставка",
+      description: "Доставка курьером по Минску в течение 1-2 рабочих дней",
+      price: "Бесплатно при заказе от 200 руб.",
+      icon: "truck",
+    },
+    {
+      title: "Европочта",
+      description: "Доставка через Европочту в любой регион страны",
+      price: "Бесплатно при заказе от 200 руб. (срок доставки 2-5 дней)",
+      icon: "envelope",
+    },
+    {
+      title: "Белпочта",
+      description: "Доставка через Белпочту по всей Беларуси",
+      price: "Бесплатно при заказе от 200 руб. (срок доставки 2-5 дней)",
+      icon: "truck",
+    },
+    {
+      title: "Самовывоз",
+      description: "Заберите заказ самостоятельно из нашего пункта выдачи",
+      price: "Бесплатно",
+      icon: "home",
+    },
+  ];
+
+  const paymentMethods = [
+    {
+      title: "Онлайн оплата",
+      description:
+        "Банковской картой Visa, MasterCard, МИР через защищенный платежный шлюз",
+      icon: "credit-card",
+    },
+    {
+      title: "Наличными курьеру",
+      description:
+        "Оплата наличными при получении заказа (только для курьерской доставки)",
+      icon: "money",
+    },
+    {
+      title: "При получении",
+      description:
+        "Оплата наложенным платежом при получении в отделении почты",
+      icon: "shopping-bag",
+    },
+  ];
+
+  const faq = [
+    {
+      question: "Как отследить заказ?",
+      answer:
+        "После оформления заказа вы получите номер отслеживания на email. Также вы можете отследить статус заказа в личном кабинете.",
+    },
+    {
+      question: "Можно ли изменить адрес доставки?",
+      answer:
+        "Да, вы можете изменить адрес доставки до момента отправки заказа. Свяжитесь с нами по телефону или email.",
+    },
+    {
+      question: "Что делать, если товар не подошел?",
+      answer:
+        "Вы можете вернуть товар в течение 14 дней с момента получения. Товар должен быть в оригинальной упаковке и с бирками.",
+    },
+    {
+      question: "Есть ли доставка в другие страны?",
+      answer:
+        "Сейчас мы доставляем по всей Беларуси. О доставке в другие страны уточняйте у наших менеджеров.",
+    },
+  ];
+
   return (
     <div className={className}>
-      <motion.section className="delivery-section" initial="hidden" animate="visible">
-        <motion.h2
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Доставка и оплата 📦
-        </motion.h2>
+      <header className="delivery-header">
+        <p className="eyebrow">Сервис</p>
+        <h1>Доставка и оплата</h1>
+        <p>
+          Отправляем заказы каждый день. По Минску — курьером за 1–2 дня, по
+          Беларуси — Европочтой и Белпочтой.
+        </p>
+      </header>
 
-        <motion.div className="delivery-methods" initial="hidden" animate="visible">
-          <h3>Способы доставки</h3>
-          <div className="methods">
-            {DELIVERY_METHODS.map((method, i) => (
-              <motion.div key={i} className="method-card" custom={i} variants={fadeUp}>
-                <Icon id={method.icon} />
-                <h4>{method.title}</h4>
-                <p>{method.description}</p>
-                <span className="price">{method.price}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div className="payment-methods" initial="hidden" animate="visible">
-          <h3>Способы оплаты</h3>
-          <div className="methods">
-            {PAYMENTS_METHODS.map((method, i) => (
-              <motion.div key={i} className="method-card" custom={i + 4} variants={fadeUp}>
-                <Icon id={method.icon} />
-                <h4>{method.title}</h4>
-                <p>{method.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div className="faq-section" initial="hidden" animate="visible">
-          <h3>Часто задаваемые вопросы</h3>
-          <div className="faq-list">
-            {FAQ.map((item, i) => (
-              <motion.div key={i} className="faq-item" custom={i + 7} variants={fadeUp}>
-                <h4>{item.question}</h4>
-                <p>{item.answer}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="contact-info"
-          initial="hidden"
-          animate="visible"
-          custom={11}
-          variants={fadeUp}
-        >
-          <h3>Нужна помощь?</h3>
-          <p>Наша служба поддержки работает ежедневно с 9:00 до 21:00</p>
-          <div className="contact-details">
-            <p>
-              <strong>Телефон:</strong> {PHONE_NUMBER}
-            </p>
-            <p>
-              <strong>Email:</strong> {EMAIL}
-            </p>
-          </div>
-        </motion.div>
+      <motion.section
+        className="delivery-section"
+        initial="hidden"
+        animate="visible"
+      >
+        <h2 className="block-title">Способы доставки</h2>
+        <div className="methods-grid">
+          {deliveryMethods.map((method, i) => (
+            <motion.div
+              key={method.title}
+              className="method-card"
+              custom={i}
+              variants={fadeUp}
+            >
+              <span className="method-icon">
+                <Icon id={method.icon} size="18" color="var(--ink)" />
+              </span>
+              <h3>{method.title}</h3>
+              <p>{method.description}</p>
+              <span className="price">{method.price}</span>
+            </motion.div>
+          ))}
+        </div>
       </motion.section>
+
+      <motion.section
+        className="payment-methods"
+        initial="hidden"
+        animate="visible"
+      >
+        <h2 className="block-title">Способы оплаты</h2>
+        <div className="methods-grid payment-grid">
+          {paymentMethods.map((method, i) => (
+            <motion.div
+              key={method.title}
+              className="method-card"
+              custom={i + 4}
+              variants={fadeUp}
+            >
+              <span className="method-icon">
+                <Icon id={method.icon} size="18" color="var(--ink)" />
+              </span>
+              <h3>{method.title}</h3>
+              <p>{method.description}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      <motion.section className="faq-section" initial="hidden" animate="visible">
+        <h2 className="block-title">Частые вопросы</h2>
+        <div className="faq-list">
+          {faq.map((item, i) => (
+            <motion.div
+              key={item.question}
+              className="faq-item"
+              custom={i + 7}
+              variants={fadeUp}
+            >
+              <h3>{item.question}</h3>
+              <p>{item.answer}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      <motion.div
+        className="contact-info"
+        initial="hidden"
+        animate="visible"
+        custom={11}
+        variants={fadeUp}
+      >
+        <div>
+          <p className="eyebrow">Поддержка</p>
+          <h2>Нужна помощь?</h2>
+          <p>Ежедневно с 9:00 до 21:00 — по телефону, почте или в мессенджерах.</p>
+        </div>
+        <div className="contact-details">
+          <a href="tel:+375291234567">+375 29 123-45-67</a>
+          <a href="mailto:info@holly.by">info@holly.by</a>
+        </div>
+      </motion.div>
     </div>
   );
 };
 
 export const Delivery = styled(DeliveryContainer)`
+  width: var(--page-width);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 0;
-  background: transparent;
-  border-radius: 20px;
-  margin-top: 20px;
-  min-height: 600px;
+  gap: clamp(48px, 6vw, 88px);
 
-  .delivery-section {
-    max-width: 1200px;
-    width: 100%;
+  & .delivery-header {
     display: flex;
     flex-direction: column;
-    gap: 40px;
-  }
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line-strong);
 
-  h2 {
-    font-size: 30px;
-    font-weight: 700;
-    color: #1f2937;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  h3 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 24px;
-    text-align: center;
-  }
-
-  h4 {
-    font-size: 20px;
-    font-weight: 600;
-    color: #1f2937;
-    margin-bottom: 12px;
-  }
-
-  .methods {
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: start;
-    gap: 24px;
-    margin-bottom: 20px;
-  }
-
-  .method-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 34px;
-    text-align: center;
-    transition: all 0.3s ease;
-
-    & i {
-      font-size: 48px;
-      color: #545454ff;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    h4 {
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    p {
-      font-size: 15px;
-      color: #6b7280;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-
-    .price {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #000000ff;
-      display: block;
-      margin-top: 8px;
-    }
-  }
-
-  .faq-section {
-    margin-top: 20px;
-  }
-
-  .faq-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .faq-item {
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
-    border-radius: 10px;
-    padding: 20px;
-    transition: all 0.3s ease;
-
-    h4 {
-      font-size: 17px;
-      margin-bottom: 8px;
-      color: var(--black-color);
-    }
-
-    p {
-      font-size: 15px;
-      color: var(--gray-color);
-      line-height: 1.6;
+    & .eyebrow {
       margin: 0;
     }
+
+    & h1 {
+      margin: 0;
+      font-size: clamp(38px, 5vw, 66px);
+      line-height: 1;
+    }
+
+    & p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--grey-color);
+      font-size: 14px;
+      line-height: 1.8;
+    }
   }
 
-  .contact-info {
-    border-radius: 16px;
-    padding: 32px;
-    text-align: center;
-    color: black;
-    margin-top: 20px;
+  & .block-title {
+    padding-bottom: 20px;
+    margin: 0 0 28px;
+    border-bottom: 1px solid var(--line);
+    font-size: clamp(22px, 2.4vw, 30px);
+  }
 
-    h3 {
-      color: black;
-      margin-bottom: 16px;
+  & .methods-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  & .payment-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  & .method-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 26px 22px;
+    border: 1px solid var(--line);
+    background-color: transparent;
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease;
+
+    &:hover {
+      border-color: var(--line-strong);
+      background-color: var(--surface);
     }
 
-    p {
-      font-size: 1rem;
-      line-height: 1.8;
+    & h3 {
+      margin: 6px 0 0;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    & p {
+      margin: 0;
+      color: var(--grey-color);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    & .price {
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      width: 100%;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+
+  & .method-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+
+  & .faq-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(32px, 5vw, 80px);
+  }
+
+  & .faq-item {
+    padding: 22px 0;
+    border-top: 1px solid var(--line);
+
+    & h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    & p {
+      margin: 0;
+      color: var(--grey-color);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+  }
+
+  & .contact-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    padding: clamp(28px, 4vw, 52px);
+    background-color: var(--paper-deep);
+
+    & .eyebrow {
       margin-bottom: 12px;
-      color: var(--black-color);
     }
 
-    .contact-details {
-      margin-top: 20px;
+    & h2 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 3vw, 40px);
+    }
 
-      p {
-        font-size: 17px;
-        margin-bottom: 8px;
+    & p:not(.eyebrow) {
+      max-width: 400px;
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+  }
 
-        strong {
-          font-weight: 600;
-        }
+  & .contact-details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+
+    & a {
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2vw, 24px);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }
 
-  @media (max-width: 768px) {
-    padding: 40px 20px;
-
-    h2 {
-      font-size: 2rem;
+  @media (max-width: 992px) {
+    & .methods-grid,
+    & .payment-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    h3 {
-      font-size: 1.5rem;
+    & .faq-list {
+      grid-template-columns: 1fr;
     }
 
-    .methods {
-      display: flex;
+    & .contact-info {
       flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+      align-items: flex-start;
     }
 
-    .method-card {
-      padding: 20px;
-    }
-
-    .contact-info {
-      padding: 24px;
+    & .contact-details {
+      align-items: flex-start;
     }
   }
-  @media (max-width: 450px) {
-    width: min(390px, 100%);
-    margin: 100px auto;
-    padding: 0px;
-    & .methods {
-      width: min(390px, 100%);
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-    }
-    h2 {
-      font-size: 35px;
-    }
-    h3 {
-      font-size: 26px;
+
+  @media (max-width: 576px) {
+    & .methods-grid,
+    & .payment-grid {
+      grid-template-columns: 1fr;
     }
   }
 `;

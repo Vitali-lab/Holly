@@ -1,86 +1,71 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useState } from "react";
+import styled from "styled-components";
 
 const ImagesContainer = ({ className, product }) => {
   const [currentImage, setCurrentImage] = useState(0);
 
-  product;
-
   return (
     <div className={className}>
       <div className="image">
-        <img src={product.images[currentImage]} alt="" />
-        {product.images.length > 1 && (
-          <div className="small-images">
-            {product.images.map((image, index) => (
-              <img key={index} src={image} alt="" onClick={() => setCurrentImage(index)} />
-            ))}
-          </div>
-        )}
+        <img src={product.images[currentImage]} alt={product.name} />
       </div>
+      {product.images.length > 1 && (
+        <div className="small-images">
+          {product.images.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt=""
+              className={index === currentImage ? "active" : ""}
+              onClick={() => setCurrentImage(index)}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
 export const Images = styled(ImagesContainer)`
   width: 100%;
-  height: auto;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  margin: 40px 0 40px 0;
-  transition: all ease 0.5s;
+  flex-direction: column;
+  gap: 12px;
 
   & .image {
     width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    border-radius: 10px;
-  }
+    background-color: var(--paper-deep);
 
-  & .image img {
-    width: 500px;
-    border-radius: 10px;
-    object-fit: contain;
-    transition: all ease 0.5s;
-    &:hover {
-      transform: scale(1.05);
-      transition: all ease 0.5s;
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 
   & .small-images {
     display: flex;
-    width: 100%;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
     gap: 10px;
-    & img {
-      width: 80px;
-      height: auto;
-      border-radius: 10px;
-      object-fit: contain;
-      cursor: pointer;
+    overflow-x: auto;
 
-      padding: 5px;
-    }
-  }
-  @media (max-width: 768px) {
-    margin-top: 120px;
-    & .image img {
-      width: 300px;
-    }
-    & .small-images {
-      & img {
-        width: 50px;
+    & img {
+      width: 72px;
+      height: 90px;
+      object-fit: cover;
+      border: 1px solid transparent;
+      cursor: pointer;
+      opacity: 0.7;
+      transition:
+        opacity 0.2s ease,
+        border-color 0.2s ease;
+
+      &:hover,
+      &.active {
+        opacity: 1;
+        border-color: var(--ink);
       }
     }
   }
