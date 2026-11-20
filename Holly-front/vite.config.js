@@ -2,18 +2,16 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === "production" ? "/Holly/" : "/",
   plugins: [react()],
-  sserver: {
+  server: {
     proxy: {
       "/api": {
         target: "http://localhost:5678",
         changeOrigin: true,
-      },
-      "/uploads": {
-        target: "http://localhost:5678",
-        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
-});
+}));

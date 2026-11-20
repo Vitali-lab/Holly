@@ -1,82 +1,173 @@
-@import url("./shared/assets/fonts/font-awesome/");
+@import url("fonts/font-awesome.css");
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: "Manrope", "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
   box-sizing: border-box;
-
-  --main-color: rgb(89, 202, 198);
-  --white-color: #ffffff;
-  --text-color: rgb(0, 0, 0);
-  --black-color: #000000c3;
-  --real-purole-color: #7e5ef0ff;
-  --green-color: #42a842;
-  --bg-color: #f6f6f6;
-  --sec-bg-color: rgba(215, 215, 217, 0.293);
-  --grey-color: #a3a3a3ff;
-  --light-grey-color: rgba(237, 237, 237, 0.572);
-  --modal-background: rgba(0, 0, 0, 0.777);
-  --red-color: rgb(197, 33, 33);
-  --box-shadow: 0px 0px 10px 5px rgba(120, 120, 120, 0.24);
-  --transform: translateY(-5px);
-  color-scheme: light dark;
-  color: rgba(0, 0, 0, 0.87);
-  background-color: #ffffff;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+
+  --ink: #17150f;
+  --ink-soft: #4d483f;
+  --grey-color: #8d877b;
+  --line: #e2dbcf;
+  --line-strong: #cfc6b6;
+  --paper: #f6f3ec;
+  --paper-deep: #ece6db;
+  --surface: #ffffff;
+  --purple-color: #4a3a7a;
+  --red-color: #9b3b2e;
+  --sec-bg-color: #efe9de;
+  --box-shadow: 0 24px 60px rgba(23, 21, 15, 0.08);
+
+  --font-display: "Prata", "Times New Roman", serif;
+  --font-body: "Manrope", "Helvetica Neue", Arial, sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+
+  --page-width: min(1400px, 100% - clamp(32px, 7vw, 128px));
+  --header-offset: 110px;
 }
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body,
 #root {
-  height: 100%;
+  min-height: 100%;
   margin: 0;
   padding: 0;
 }
 
-#loader-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #ffffff;
+body {
+  color: var(--ink);
+  background-color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+#root {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  gap: 40px;
 }
-#loader-text {
-  font-size: 20px;
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+p {
+  color: var(--ink-soft);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+input,
+select,
+textarea {
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-soft);
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--grey-color);
+}
+
+.section-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.4vw, 46px);
+  font-weight: 400;
+}
+
+.page-shell {
+  width: var(--page-width);
+  margin: 0 auto;
+}
+
+.toast-ios {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  backdrop-filter: blur(14px);
+  border-radius: var(--radius-md);
+  box-shadow: 0 14px 40px rgba(23, 21, 15, 0.14);
+  font-family: var(--font-body);
+  padding: 12px 20px;
+  border: 1px solid var(--line);
+}
+
+.toast-ios-body {
+  font-size: 15px;
   font-weight: 500;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
-#loader {
-  width: 90px;
-  height: 90px;
-  border: 10px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 10px solid var(--main-color);
-  animation: spin 2s linear infinite;
-}
-#loader img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  position: absolute;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+@media (max-width: 768px) {
+  :root {
+    --header-offset: 96px;
+    --page-width: calc(100% - 32px);
   }
 }

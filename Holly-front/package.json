@@ -1,9 +1,9 @@
 {
-  "name": "holly",
+  "name": "petclub",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "proxy": "http://90.156.211.91",
+  "proxy": "http://localhost:3005",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -14,8 +14,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@reduxjs/toolkit": "^2.10.1",
-    "framer-motion": "^12.23.25",
+    "framer-motion": "^12.23.22",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.65.0",

@@ -1,40 +1,52 @@
-import { useSelector } from 'react-redux';
-import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Input } from '../../shared/ui';
-import { ProductList } from '../product-list/ProductList';
-import { selectCategories, allProductsSelector } from '../../entities/selectors';
-import { Modal } from '../product-list/Modal';
-import { useGetCreatedOrdersCount } from '../../shared/hooks/use-get-createt-orders-count';
-import styled from 'styled-components';
+import { Icon } from "../../components/icon/Icon";
+import { useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/button/Button";
+import { Modal } from "../../components/modal/Modal";
+import styled from "styled-components";
+import { ProductList } from "./components/product-list/ProductList";
+import { categorySelector, productsSelector } from "../../selectors";
 
 const AdminPanelContainer = ({ className }) => {
+  const [productsOpen, setProductsOpen] = useState(true);
   const navigate = useNavigate();
-  const { allProducts: products } = useSelector(allProductsSelector);
-  const { categories } = useSelector(selectCategories);
-  const [openModal, setOpenModal] = useState(false);
-  const [productId, setProductId] = useState('');
-  const [searchItem, setSearchItem] = useState('');
-  const { createdOrdersCount } = useGetCreatedOrdersCount();
 
-  const filteredProducts = useMemo(() => {
-    if (!searchItem) return products;
-    return products?.filter((product) =>
-      product.name.toLowerCase().includes(searchItem.toLowerCase())
-    );
-  }, [products, searchItem]);
+  const products = useSelector(productsSelector);
+  const categories = useSelector(categorySelector);
+  const [openModal, setOpenModal] = useState(false);
+  const [productId, setProductId] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   const currentCategory = (product) => {
-    const currentCategory = categories.find((category) => category.id === product.categoryId);
-    return currentCategory ? currentCategory.name : '';
+    const currentCategory = categories.find(
+      (category) => category.id === product.categoryId,
+    );
+    return currentCategory ? currentCategory.name : "";
   };
+
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm) return products;
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+  }, [products, searchTerm]);
+
+  const stats = [
+    { label: "Товаров", value: products.length },
+    { label: "Категорий", value: categories.length },
+    {
+      label: "Отфильтровано",
+      value: filteredProducts.length,
+    },
+  ];
 
   return (
     <div className={className}>
       <>
         {openModal && (
           <Modal productId={productId} setOpenModal={setOpenModal}>
-            {`Вы действительно хотите удалить товар ${products.find((product) => product.id === productId).name}?`}
+            Вы действительно хотите удалить товар ?
           </Modal>
         )}
         <header className="admin-header">
@@ -42,46 +54,59 @@ const AdminPanelContainer = ({ className }) => {
             <p>Holly Admin Panel</p>
             <h1>Панель администратора</h1>
           </div>
+          <div className="stats">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <span>{stat.label}</span>
+                <strong>{stat.value}</strong>
+              </div>
+            ))}
+          </div>
         </header>
         <div className="toolbar">
-          <div className="search-header">
-            <Input
+          <div className="search">
+            <input
               type="text"
               placeholder="Искать по названию..."
-              value={searchItem}
-              onChange={(e) => setSearchItem(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <Icon id="search" />
           </div>
           <div className="buttons-add">
-            <Button onClick={() => navigate('/admin-panel/add-product')}>Добавить товар</Button>
-            <Button onClick={() => navigate('/admin-panel/edit-params')}>Добавить параметры</Button>
-            <Button onClick={() => navigate('/admin-panel/users-orders')}>
-              Заказы пользователей{' '}
-              {createdOrdersCount() > 0 && (
-                <p className="new-orders-count">{createdOrdersCount()}</p>
-              )}
+            <Button onClick={() => navigate("/admin-panel/add-product")}>
+              Добавить товар
             </Button>
-
-            <Button onClick={() => navigate('/admin-panel/edit-widgets')}>
-              Изменить виджеты на главной
+            <Button onClick={() => navigate("/admin-panel/edit-params")}>
+              Добавить параметры
+            </Button>
+            <Button onClick={() => navigate("/admin-panel/users-orders")}>
+              Заказы пользователей
             </Button>
           </div>
         </div>
         <div className="products">
-          <div className="header-section">
+          <div
+            className="header-section"
+            onClick={() => setProductsOpen(!productsOpen)}
+          >
             <h2>
-              Список товаров{' '}
+              Список товаров{" "}
               <span>
                 ({filteredProducts.length}/{products.length})
               </span>
             </h2>
+            <Icon id={productsOpen ? "angle-up" : "angle-down"} />
           </div>
-          <ProductList
-            products={filteredProducts}
-            currentCategory={currentCategory}
-            setOpenModal={setOpenModal}
-            setProductId={setProductId}
-          />
+          {productsOpen && (
+            <ProductList
+              productsOpen={productsOpen}
+              products={filteredProducts}
+              currentCategory={currentCategory}
+              setOpenModal={setOpenModal}
+              setProductId={setProductId}
+            />
+          )}
         </div>
         <div></div>
       </>
@@ -117,14 +142,18 @@ export const AdminPanel = styled(AdminPanelContainer)`
       font-size: 12px;
     }
 
-    
+    .stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
 
       div {
         background: #fff;
         border-radius: 12px;
         padding: 12px 16px;
         min-width: 140px;
-        
+        box-shadow: var(--box-shadow);
+        border: 1px solid rgba(15, 23, 42, 0.05);
 
         span {
           font-size: 12px;
@@ -140,42 +169,50 @@ export const AdminPanel = styled(AdminPanelContainer)`
     }
   }
 
-  
+  .toolbar {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .search {
+    flex: 1 1 280px;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 12px 48px 12px 20px;
+      font-size: 15px;
+      outline: none;
+
+      &:focus {
+        border-color: var(--purple-color);
+        box-shadow: 0 0 0 3px rgba(126, 94, 240, 0.1);
+      }
+    }
+
+    i {
+      position: absolute;
+      right: 18px;
+      color: #94a3b8;
+    }
+  }
+
   .buttons-add {
     display: flex;
-    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 12px;
-
 
     button {
       min-width: 180px;
     }
-  }
-
-  & .search-header{
-  display: flex;
-  flex-direction: row;
-  justify-content: start;
-  align-items: center;
-  width: 100%;
-
-  }
-
-  & .new-orders-count{
-    position: absolute;
-    top: -21px;
-    right: -9px;
-    background-color: red;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 11px;
-    font-weight: bold;
   }
 
   .products {
@@ -183,7 +220,8 @@ export const AdminPanel = styled(AdminPanelContainer)`
     background: #fff;
     border-radius: 20px;
     padding: 20px;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(15, 23, 42, 0.05);
   }
 
   & .header-section {
@@ -211,6 +249,10 @@ export const AdminPanel = styled(AdminPanelContainer)`
       flex-direction: column;
     }
 
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
 
     .products {
       padding: 16px;
