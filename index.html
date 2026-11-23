@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/Holly/assets/logo-BHzPOWME.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Holly — одежда и аксессуары для тех, кто выбирает спокойную элегантность. Каталог, доставка по Беларуси."
+    />
+    <meta name="theme-color" content="#f6f3ec" />
+    <meta property="og:title" content="Holly — одежда и аксессуары" />
+    <meta
+      property="og:description"
+      content="Спокойная элегантность на каждый день. Новая коллекция Holly."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=Prata&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function (location) {
+        if (location.search[1] === "/") {
+          var decoded = location.search
+            .slice(1)
+            .split("&")
+            .map(function (part) {
+              return part.replace(/~and~/g, "&");
+            })
+            .join("?");
+          window.history.replaceState(
+            null,
+            null,
+            location.pathname.slice(0, -1) + decoded + location.hash,
+          );
+        }
+      })(window.location);
+    </script>
+    <title>Holly — одежда и аксессуары</title>
+    <script type="module" crossorigin src="/Holly/assets/index-OlVwAZl4.js"></script>
+    <link rel="stylesheet" crossorigin href="/Holly/assets/index-CJypV8SH.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="portal"></div>
+  </body>
+</html>
